@@ -1,0 +1,186 @@
+openapi: 3.0.3
+info:
+  title: Promo-IT Backend
+  description: "Spring Boot API для Promo-IT: регистрация пользователей с уникальным ADMIN."
+  version: 1.0.0
+  contact:
+    name: Promo-IT Team
+
+servers:
+  - url: http://localhost:8080
+    description: Development server
+
+tags:
+  - name: Authentication
+    description: Регистрация пользователей
+
+paths:
+  /auth/register:
+    post:
+      tags:
+        - Authentication
+      summary: Регистрация пользователя
+      description: Создаёт пользователя с ролью ORDINARY или ADMIN (если ADMIN ещё нет).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+            examples:
+              validOrdinary:
+                summary: Valid ordinary user (should return 201)
+                value:
+                  login: "user123"
+                  password: "StrongPass123!"
+                  role: "ordinary"
+              validAdmin:
+                summary: Valid admin creation (should return 201, if admin does not exist yet)
+                value:
+                  login: "admin"
+                  password: "secretAdminPass"
+                  role: "admin"
+              weakPassword:
+                summary: Weak password (too short or invalid chars)
+                value:
+                  login: "userStrong"
+                  password: "weak"
+                  role: "ordinary"
+              loginOccupied:
+                summary: Login already exists (e.g., user123)
+                value:
+                  login: "user123"
+                  password: "AnotherPass123!"
+                  role: "ordinary"
+              adminOnExistingAdmin:
+                summary: New ADMIN when ADMIN already exists (should return 409)
+                value:
+                  login: "admin2"
+                  password: "AdminPass123!"
+                  role: "admin"
+
+      responses:
+        '201':
+          description: Пользователь успешно создан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegisterResponse'
+
+        '400':
+          description: |
+            Валидация:
+
+            - Слабый пароль
+            - Логин уже занят
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+              examples:
+                weakPassword:
+                  summary: Weak password detected
+                  value:
+                    title: "Weak Password"
+                    status: 400
+                    detail: "Weak password. Password should comply with: ^[a-zA-Z0-9!@#$%^&*()]{8,}$"
+                    instance: "/auth/register"
+                loginOccupied:
+                  summary: Login already occupied
+                  value:
+                    title: "Login Occupied"
+                    status: 400
+                    detail: "Login 'user123' already occupied."
+                    instance: "/auth/register"
+
+        '409':
+          description: Admin уже существует, нельзя создать второго
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+              examples:
+                adminExists:
+                  summary: Cannot create second admin
+                  value:
+                    title: "Conflict"
+                    status: 409
+                    detail: "Admin already exists"
+                    instance: "/auth/register"
+
+components:
+  schemas:
+    RegisterRequest:
+      type: object
+      required:
+        - login
+        - password
+        - role
+      properties:
+        login:
+          type: string
+          minLength: 3
+          description: Уникальный логин пользователя.
+        password:
+          type: string
+          minLength: 8
+          writeOnly: true
+          description: |
+            - Минимум 8 символов.
+            - Допустимы только: a-z, A-Z, 0-9, !@#$%^&*()
+            - Паттерн: ^[a-zA-Z0-9!@#$%^&*()]{8,}$
+        role:
+          type: string
+          enum: ["admin", "ordinary"]
+          description: |
+            - ORDINARY можно создавать многократно.
+            - ADMIN создаётся только если ещё нет.
+
+    RegisterResponse:
+      type: object
+      required:
+        - id
+        - login
+        - role
+      properties:
+        id:
+          type: integer
+          format: int64
+        login:
+          type: string
+          example: "user123"
+        role:
+          type: string
+          enum: ["admin", "ordinary"]
+
+    ProblemDetail:
+      type: object
+      description: RFC 9457 style Problem Details.
+      required:
+        - status
+        - title
+      properties:
+        type:
+          type: string
+          format: uri
+          default: "about:/blank"
+        title:
+          type: string
+          description: Краткое описание типа ошибки.
+        status:
+          type: integer
+          format: int32
+          description: HTTP статус код.
+        detail:
+          type: string
+          description: Подробное сообщение.
+        instance:
+          type: string
+          format: uri
+          description: URI конкретного случая проблемы.
+
+securitySchemes:
+  bearerAuth:
+    type: http
+    scheme: bearer
+    bearerFormat: JWT
