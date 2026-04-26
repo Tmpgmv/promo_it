@@ -1,0 +1,29 @@
+2026-04-26T22:27:43.366+03:00  INFO 84539 --- [promo_it] [main] g.academic.promo_it.PromoItApplication   : Starting PromoItApplication using Java 17.0.18 with PID 84539 (/home/michael/Documents/promo_it/build/classes/java/main started by michael in /home/michael/Documents/promo_it)
+2026-04-26T22:27:43.369+03:00  INFO 84539 --- [promo_it] [main] g.academic.promo_it.PromoItApplication   : No active profile set, falling back to 1 default profile: "default"
+2026-04-26T22:27:43.917+03:00  INFO 84539 --- [promo_it] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JDBC repositories in DEFAULT mode.
+2026-04-26T22:27:43.956+03:00  INFO 84539 --- [promo_it] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 34 ms. Found 1 JDBC repository interface.
+2026-04-26T22:27:44.370+03:00  INFO 84539 --- [promo_it] [main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-04-26T22:27:44.381+03:00  INFO 84539 --- [promo_it] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-04-26T22:27:44.381+03:00  INFO 84539 --- [promo_it] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.21]
+2026-04-26T22:27:44.420+03:00  INFO 84539 --- [promo_it] [main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1001 ms
+2026-04-26T22:27:44.480+03:00  INFO 84539 --- [promo_it] [main] f.a.AutowiredAnnotationBeanPostProcessor : Autowired annotation is not supported on static fields: private static boolean gift.academic.promo_it.PromoItApplication.debug
+2026-04-26T22:27:44.555+03:00  INFO 84539 --- [promo_it] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-04-26T22:27:44.825+03:00  INFO 84539 --- [promo_it] [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@70b48eb3
+2026-04-26T22:27:44.826+03:00  INFO 84539 --- [promo_it] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-04-26T22:27:45.129+03:00  WARN 84539 --- [promo_it] [main] .s.a.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: 52f0f279-0417-4c4e-a72f-63494b7abd3e
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-04-26T22:27:45.137+03:00  INFO 84539 --- [promo_it] [main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-04-26T22:27:45.520+03:00  INFO 84539 --- [promo_it] [main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-04-26T22:27:45.526+03:00  INFO 84539 --- [promo_it] [main] g.academic.promo_it.PromoItApplication   : Started PromoItApplication in 2.603 seconds (process running for 3.027)
+2026-04-26T22:28:06.952+03:00  INFO 84539 --- [promo_it] [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-04-26T22:28:06.953+03:00  INFO 84539 --- [promo_it] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-04-26T22:28:06.954+03:00  INFO 84539 --- [promo_it] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2026-04-26T22:28:07.242+03:00  INFO 84539 --- [promo_it] [http-nio-8080-exec-1] g.academic.promo_it.controllers.Auth     : User created Login: user123, role: ordinary
+2026-04-26T22:28:31.621+03:00  INFO 84539 --- [promo_it] [SpringApplicationShutdownHook] o.s.boot.tomcat.GracefulShutdown         : Commencing graceful shutdown. Waiting for active requests to complete
+2026-04-26T22:28:31.623+03:00  INFO 84539 --- [promo_it] [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown         : Graceful shutdown complete
+2026-04-26T22:28:31.627+03:00  INFO 84539 --- [promo_it] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-04-26T22:28:31.638+03:00  INFO 84539 --- [promo_it] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.

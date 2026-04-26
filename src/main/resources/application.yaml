@@ -14,4 +14,12 @@ spring:
 
 logging:
   level:
-    org.springframework.jdbc: DEBUG
+    org.springframework.jdbc: INFO
+    gift.academic: INFO
+
+  file:
+    name: /home/michael/Documents/promo_it/src/main/java/gift/academic/promo_it/logs/promo_it.log
+  logback:
+    rollingpolicy:
+      max-file-size: 10MB
+      max-history: 7

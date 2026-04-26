@@ -14,10 +14,12 @@ public class User {
     private String password;
     private String role;
 
-    public User(){}
-    public User (String login,
-                 String password,
-                 Role role){
+    public User() {
+    }
+
+    public User(String login,
+                String password,
+                Role role) {
         this.login = login;
         this.password = password;
         this.role = role.getSlug();
@@ -57,5 +59,10 @@ public class User {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "Login: %s, role: %s".formatted(login, role);
     }
 }

@@ -10,12 +10,14 @@ import gift.academic.promo_it.validators.PasswordValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("auth")
 @CrossOrigin // См. комментарий к WebConfig.
 public class Auth {
-
+    private static final Logger logger = LoggerFactory.getLogger(Auth.class);
     private final UserService userService;
     private final UserToRegisterResponse userToRegisterResponse;
     private final PasswordValidator passwordValidator;
@@ -32,6 +34,7 @@ public class Auth {
         passwordValidator.validatePassword(registerRequestDto.getPassword());
         User user = userService.createUser(registerRequestDto);
         RegisterResponseDto responseDto = userToRegisterResponse.convert(user);
+        logger.info("User created %s".formatted(user));
         return responseDto;
     }
 }
