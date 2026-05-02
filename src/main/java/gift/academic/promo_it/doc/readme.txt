@@ -100,3 +100,10 @@ sudo docker run --rm -p 8081:8080 \
   -e SWAGGER_JSON=/spec/swagger.yaml \
   -v "$PWD":/spec \
   --name swaggerui swaggerapi/swagger-ui
+
+
+Для каждого теста:
+1. Название теста.
+2. Сценарий.
+3. Что на входе.
+4. Ожидаемый результат.

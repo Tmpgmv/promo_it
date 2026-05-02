@@ -1,29 +1,84 @@
-2026-04-26T22:27:43.366+03:00  INFO 84539 --- [promo_it] [main] g.academic.promo_it.PromoItApplication   : Starting PromoItApplication using Java 17.0.18 with PID 84539 (/home/michael/Documents/promo_it/build/classes/java/main started by michael in /home/michael/Documents/promo_it)
-2026-04-26T22:27:43.369+03:00  INFO 84539 --- [promo_it] [main] g.academic.promo_it.PromoItApplication   : No active profile set, falling back to 1 default profile: "default"
-2026-04-26T22:27:43.917+03:00  INFO 84539 --- [promo_it] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JDBC repositories in DEFAULT mode.
-2026-04-26T22:27:43.956+03:00  INFO 84539 --- [promo_it] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 34 ms. Found 1 JDBC repository interface.
-2026-04-26T22:27:44.370+03:00  INFO 84539 --- [promo_it] [main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
-2026-04-26T22:27:44.381+03:00  INFO 84539 --- [promo_it] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2026-04-26T22:27:44.381+03:00  INFO 84539 --- [promo_it] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.21]
-2026-04-26T22:27:44.420+03:00  INFO 84539 --- [promo_it] [main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1001 ms
-2026-04-26T22:27:44.480+03:00  INFO 84539 --- [promo_it] [main] f.a.AutowiredAnnotationBeanPostProcessor : Autowired annotation is not supported on static fields: private static boolean gift.academic.promo_it.PromoItApplication.debug
-2026-04-26T22:27:44.555+03:00  INFO 84539 --- [promo_it] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2026-04-26T22:27:44.825+03:00  INFO 84539 --- [promo_it] [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@70b48eb3
-2026-04-26T22:27:44.826+03:00  INFO 84539 --- [promo_it] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2026-04-26T22:27:45.129+03:00  WARN 84539 --- [promo_it] [main] .s.a.UserDetailsServiceAutoConfiguration : 
+2026-05-02T16:42:48.000+03:00  INFO 51508 --- [promo_it] [Test worker] g.a.p.i.PromoItApplicationTests          : Starting PromoItApplicationTests using Java 17.0.18 with PID 51508 (started by michael in /home/michael/Documents/promo_it)
+2026-05-02T16:42:48.004+03:00  INFO 51508 --- [promo_it] [Test worker] g.a.p.i.PromoItApplicationTests          : No active profile set, falling back to 1 default profile: "default"
+2026-05-02T16:42:48.454+03:00  INFO 51508 --- [promo_it] [Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JDBC repositories in DEFAULT mode.
+2026-05-02T16:42:48.488+03:00  INFO 51508 --- [promo_it] [Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 29 ms. Found 1 JDBC repository interface.
+2026-05-02T16:42:48.733+03:00  INFO 51508 --- [promo_it] [Test worker] f.a.AutowiredAnnotationBeanPostProcessor : Autowired annotation is not supported on static fields: private static boolean gift.academic.promo_it.PromoItApplication.debug
+2026-05-02T16:42:48.796+03:00  INFO 51508 --- [promo_it] [Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-05-02T16:42:48.996+03:00  INFO 51508 --- [promo_it] [Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@56d6a1b1
+2026-05-02T16:42:48.998+03:00  INFO 51508 --- [promo_it] [Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-05-02T16:42:49.321+03:00  WARN 51508 --- [promo_it] [Test worker] .s.s.UserDetailsServiceAutoConfiguration : 
 
-Using generated security password: 52f0f279-0417-4c4e-a72f-63494b7abd3e
+Using generated security password: 95fe6fbe-df90-4cc0-b209-a39cb8b7bd28
 
 This generated password is for development use only. Your security configuration must be updated before running your application in production.
 
-2026-04-26T22:27:45.137+03:00  INFO 84539 --- [promo_it] [main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
-2026-04-26T22:27:45.520+03:00  INFO 84539 --- [promo_it] [main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
-2026-04-26T22:27:45.526+03:00  INFO 84539 --- [promo_it] [main] g.academic.promo_it.PromoItApplication   : Started PromoItApplication in 2.603 seconds (process running for 3.027)
-2026-04-26T22:28:06.952+03:00  INFO 84539 --- [promo_it] [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2026-04-26T22:28:06.953+03:00  INFO 84539 --- [promo_it] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
-2026-04-26T22:28:06.954+03:00  INFO 84539 --- [promo_it] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
-2026-04-26T22:28:07.242+03:00  INFO 84539 --- [promo_it] [http-nio-8080-exec-1] g.academic.promo_it.controllers.Auth     : User created Login: user123, role: ordinary
-2026-04-26T22:28:31.621+03:00  INFO 84539 --- [promo_it] [SpringApplicationShutdownHook] o.s.boot.tomcat.GracefulShutdown         : Commencing graceful shutdown. Waiting for active requests to complete
-2026-04-26T22:28:31.623+03:00  INFO 84539 --- [promo_it] [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown         : Graceful shutdown complete
-2026-04-26T22:28:31.627+03:00  INFO 84539 --- [promo_it] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2026-04-26T22:28:31.638+03:00  INFO 84539 --- [promo_it] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2026-05-02T16:42:49.327+03:00  INFO 51508 --- [promo_it] [Test worker] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-05-02T16:42:49.579+03:00  INFO 51508 --- [promo_it] [Test worker] g.a.p.i.PromoItApplicationTests          : Started PromoItApplicationTests in 1.816 seconds (process running for 2.539)
+2026-05-02T16:42:50.034+03:00  INFO 51508 --- [promo_it] [Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [gift.academic.promo_it.integration.RegistrationControllerTest]: RegistrationControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-02T16:42:50.042+03:00  INFO 51508 --- [promo_it] [Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration gift.academic.promo_it.PromoItApplication for test class gift.academic.promo_it.integration.RegistrationControllerTest
+2026-05-02T16:42:50.067+03:00  INFO 51508 --- [promo_it] [Test worker] g.a.p.i.RegistrationControllerTest       : Starting RegistrationControllerTest using Java 17.0.18 with PID 51508 (started by michael in /home/michael/Documents/promo_it)
+2026-05-02T16:42:50.067+03:00  INFO 51508 --- [promo_it] [Test worker] g.a.p.i.RegistrationControllerTest       : No active profile set, falling back to 1 default profile: "default"
+2026-05-02T16:42:50.192+03:00  INFO 51508 --- [promo_it] [Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JDBC repositories in DEFAULT mode.
+2026-05-02T16:42:50.198+03:00  INFO 51508 --- [promo_it] [Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 5 ms. Found 1 JDBC repository interface.
+2026-05-02T16:42:50.405+03:00  INFO 51508 --- [promo_it] [Test worker] f.a.AutowiredAnnotationBeanPostProcessor : Autowired annotation is not supported on static fields: private static boolean gift.academic.promo_it.PromoItApplication.debug
+2026-05-02T16:42:50.476+03:00  INFO 51508 --- [promo_it] [Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Starting...
+2026-05-02T16:42:50.529+03:00  INFO 51508 --- [promo_it] [Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-2 - Added connection org.postgresql.jdbc.PgConnection@4a9f0360
+2026-05-02T16:42:50.530+03:00  INFO 51508 --- [promo_it] [Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Start completed.
+2026-05-02T16:42:50.678+03:00  WARN 51508 --- [promo_it] [Test worker] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: e9449ec2-2b8a-4334-bab5-774adf587b72
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-05-02T16:42:50.680+03:00  INFO 51508 --- [promo_it] [Test worker] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-05-02T16:42:50.830+03:00  INFO 51508 --- [promo_it] [Test worker] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-05-02T16:42:50.830+03:00  INFO 51508 --- [promo_it] [Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-05-02T16:42:50.832+03:00  INFO 51508 --- [promo_it] [Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 2 ms
+2026-05-02T16:42:50.849+03:00  INFO 51508 --- [promo_it] [Test worker] g.a.p.i.RegistrationControllerTest       : Started RegistrationControllerTest in 0.805 seconds (process running for 3.809)
+2026-05-02T16:42:51.086+03:00  INFO 51508 --- [promo_it] [Test worker] g.academic.promo_it.controllers.Auth     : User created Mock for User, hashCode: 1256469923
+2026-05-02T16:42:51.140+03:00  INFO 51508 --- [promo_it] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-05-02T16:42:51.158+03:00  INFO 51508 --- [promo_it] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2026-05-02T16:42:51.162+03:00  INFO 51508 --- [promo_it] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Shutdown initiated...
+2026-05-02T16:42:51.186+03:00  INFO 51508 --- [promo_it] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Shutdown completed.
+2026-05-02T16:47:41.365+03:00  INFO 52275 --- [promo_it] [Test worker] g.a.p.i.RegistrationControllerTest       : Starting RegistrationControllerTest using Java 17.0.18 with PID 52275 (started by michael in /home/michael/Documents/promo_it)
+2026-05-02T16:47:41.367+03:00  INFO 52275 --- [promo_it] [Test worker] g.a.p.i.RegistrationControllerTest       : No active profile set, falling back to 1 default profile: "default"
+2026-05-02T16:47:41.806+03:00  INFO 52275 --- [promo_it] [Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JDBC repositories in DEFAULT mode.
+2026-05-02T16:47:41.841+03:00  INFO 52275 --- [promo_it] [Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 30 ms. Found 1 JDBC repository interface.
+2026-05-02T16:47:42.696+03:00  INFO 52275 --- [promo_it] [Test worker] f.a.AutowiredAnnotationBeanPostProcessor : Autowired annotation is not supported on static fields: private static boolean gift.academic.promo_it.PromoItApplication.debug
+2026-05-02T16:47:42.797+03:00  INFO 52275 --- [promo_it] [Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-05-02T16:47:43.040+03:00  INFO 52275 --- [promo_it] [Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@53d87b2d
+2026-05-02T16:47:43.042+03:00  INFO 52275 --- [promo_it] [Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-05-02T16:47:43.428+03:00  WARN 52275 --- [promo_it] [Test worker] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: 926a1357-f937-499d-831f-e424693aadda
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-05-02T16:47:43.433+03:00  INFO 52275 --- [promo_it] [Test worker] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-05-02T16:47:43.718+03:00  INFO 52275 --- [promo_it] [Test worker] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-05-02T16:47:43.718+03:00  INFO 52275 --- [promo_it] [Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-05-02T16:47:43.719+03:00  INFO 52275 --- [promo_it] [Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 1 ms
+2026-05-02T16:47:43.741+03:00  INFO 52275 --- [promo_it] [Test worker] g.a.p.i.RegistrationControllerTest       : Started RegistrationControllerTest in 2.605 seconds (process running for 3.407)
+2026-05-02T16:47:43.891+03:00  INFO 52275 --- [promo_it] [Test worker] g.academic.promo_it.controllers.Auth     : User created Mock for User, hashCode: 259749664
+2026-05-02T16:47:43.978+03:00  INFO 52275 --- [promo_it] [Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [gift.academic.promo_it.integration.PromoItApplicationTests]: PromoItApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-02T16:47:43.980+03:00  INFO 52275 --- [promo_it] [Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration gift.academic.promo_it.PromoItApplication for test class gift.academic.promo_it.integration.PromoItApplicationTests
+2026-05-02T16:47:44.006+03:00  INFO 52275 --- [promo_it] [Test worker] g.a.p.i.PromoItApplicationTests          : Starting PromoItApplicationTests using Java 17.0.18 with PID 52275 (started by michael in /home/michael/Documents/promo_it)
+2026-05-02T16:47:44.006+03:00  INFO 52275 --- [promo_it] [Test worker] g.a.p.i.PromoItApplicationTests          : No active profile set, falling back to 1 default profile: "default"
+2026-05-02T16:47:44.158+03:00  INFO 52275 --- [promo_it] [Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JDBC repositories in DEFAULT mode.
+2026-05-02T16:47:44.166+03:00  INFO 52275 --- [promo_it] [Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 5 ms. Found 1 JDBC repository interface.
+2026-05-02T16:47:44.220+03:00  INFO 52275 --- [promo_it] [Test worker] f.a.AutowiredAnnotationBeanPostProcessor : Autowired annotation is not supported on static fields: private static boolean gift.academic.promo_it.PromoItApplication.debug
+2026-05-02T16:47:44.244+03:00  INFO 52275 --- [promo_it] [Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Starting...
+2026-05-02T16:47:44.263+03:00  INFO 52275 --- [promo_it] [Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-2 - Added connection org.postgresql.jdbc.PgConnection@48b744fd
+2026-05-02T16:47:44.264+03:00  INFO 52275 --- [promo_it] [Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Start completed.
+2026-05-02T16:47:44.346+03:00  WARN 52275 --- [promo_it] [Test worker] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: 387b7879-c02b-407c-b6bb-2651d774ea60
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-05-02T16:47:44.347+03:00  INFO 52275 --- [promo_it] [Test worker] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-05-02T16:47:44.420+03:00  INFO 52275 --- [promo_it] [Test worker] g.a.p.i.PromoItApplicationTests          : Started PromoItApplicationTests in 0.438 seconds (process running for 4.085)
+2026-05-02T16:47:44.440+03:00  INFO 52275 --- [promo_it] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-05-02T16:47:44.456+03:00  INFO 52275 --- [promo_it] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2026-05-02T16:47:44.459+03:00  INFO 52275 --- [promo_it] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Shutdown initiated...
+2026-05-02T16:47:44.462+03:00  INFO 52275 --- [promo_it] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Shutdown completed.

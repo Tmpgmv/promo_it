@@ -7,7 +7,6 @@ spring:
     username: promo_it
     password: awerdWdgy!24
     driver-class-name: org.postgresql.Driver
-  # Optional: JDBC / logging tuning
   jdbc:
     template:
       query-timeout: 30

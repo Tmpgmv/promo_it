@@ -5,6 +5,21 @@ public class RegisterRequestDto {
     private String password;
     private String role;
 
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public RegisterRequestDto() {
+    }
+
     public RegisterRequestDto(String login,
                               String password,
                               String role) {
