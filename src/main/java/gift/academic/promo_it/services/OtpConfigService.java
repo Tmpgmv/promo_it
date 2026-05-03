@@ -1,5 +1,6 @@
 package gift.academic.promo_it.services;
 
+import gift.academic.promo_it.dtos.OtpConfigUpdateRequestDto;
 import gift.academic.promo_it.models.OtpConfig;
 import gift.academic.promo_it.repositories.OtpConfigRepository;
 import org.springframework.stereotype.Service;
@@ -9,9 +10,10 @@ import java.time.Duration;
 
 @Service
 public class OtpConfigService {
+
     private final OtpConfigRepository repository;
 
-    // Constants for default values
+    // Константы для настроек по умолчанию
     private static final long CONFIG_ID = 1L;
     private static final Duration DEFAULT_LIFESPAN = Duration.ofMinutes(5);
     private static final int DEFAULT_SYMBOLS = 6;
@@ -21,8 +23,8 @@ public class OtpConfigService {
     }
 
     /**
-     * Retrieves the current configuration.
-     * If absent, initializes with defaults and returns them.
+     * Получает текущую конфигурацию.
+     * Если запись отсутствует в БД, инициализирует её значениями по умолчанию.
      */
     @Transactional
     public OtpConfig getConfig() {
@@ -31,24 +33,33 @@ public class OtpConfigService {
     }
 
     /**
-     * Updates OTP settings.
-     * Uses the record's internal validation via the constructor.
+     * Обновляет настройки OTP.
+     * Создает новый экземпляр рекорда (так как они неизменяемы) и сохраняет его.
      */
     @Transactional
-    public void updateConfig(Duration lifespan, int numberOfSymbols) {
-        // We leverage the OtpConfig record's compact constructor for validation
-        OtpConfig newConfig = new OtpConfig(CONFIG_ID, lifespan, numberOfSymbols);
+    public OtpConfig updateConfig(OtpConfigUpdateRequestDto request) {
+        OtpConfig newConfig = new OtpConfig(
+                CONFIG_ID,
+                Duration.parse(request.lifespan()),
+                request.numberOfSymbols()
+        );
+
         repository.save(newConfig);
+        return newConfig;
     }
 
     /**
-     * Resets settings to factory defaults.
+     * Сброс настроек к заводским значениям.
      */
     @Transactional
     public void resetToDefault() {
-        updateConfig(DEFAULT_LIFESPAN, DEFAULT_SYMBOLS);
+        OtpConfig defaultConfig = new OtpConfig(CONFIG_ID, DEFAULT_LIFESPAN, DEFAULT_SYMBOLS);
+        repository.save(defaultConfig);
     }
 
+    /**
+     * Вспомогательный метод для первичной инициализации.
+     */
     private OtpConfig initializeAndGetDefault() {
         repository.initializeDefaultIfAbsent(DEFAULT_LIFESPAN, DEFAULT_SYMBOLS);
         return new OtpConfig(CONFIG_ID, DEFAULT_LIFESPAN, DEFAULT_SYMBOLS);
