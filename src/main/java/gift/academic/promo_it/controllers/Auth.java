@@ -6,10 +6,12 @@ import gift.academic.promo_it.dtos.LoginResponseDto;
 import gift.academic.promo_it.dtos.RegisterRequestDto;
 import gift.academic.promo_it.dtos.RegisterResponseDto;
 import gift.academic.promo_it.models.User;
+import gift.academic.promo_it.services.JwtService;
 import gift.academic.promo_it.services.UserService;
 import gift.academic.promo_it.services.converters.UserToRegisterResponse;
 import gift.academic.promo_it.validators.PasswordValidator;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -25,11 +27,13 @@ public class Auth {
     private final UserService userService;
     private final UserToRegisterResponse userToRegisterResponse;
     private final PasswordValidator passwordValidator;
+    private final JwtService jwtService;
 
-    public Auth(UserService userService, UserToRegisterResponse userToRegisterResponse, PasswordValidator passwordValidator) {
+    public Auth(UserService userService, UserToRegisterResponse userToRegisterResponse, PasswordValidator passwordValidator, JwtService jwtService) {
         this.userService = userService;
         this.userToRegisterResponse = userToRegisterResponse;
         this.passwordValidator = passwordValidator;
+        this.jwtService = jwtService;
     }
 
     @PostMapping("register")
@@ -55,6 +59,16 @@ public class Auth {
             logger.error("Unexpected error during login for user {}", loginRequestDto.getLogin(), ex);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Internal error", ex);
         }
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(@RequestHeader("Authorization") String authHeader) {
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+            // Логика добавления токена в Blacklist (см. ниже)
+            jwtService.invalidateToken(token);
+        }
+        return ResponseEntity.noContent().build();
     }
 
 }
