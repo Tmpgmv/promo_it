@@ -17,7 +17,7 @@ tags:
     description: Управление пользователями
 
 paths:
-  /users:
+  /users/list:
     get:
       x-role-required: ADMIN
       tags:

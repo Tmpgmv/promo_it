@@ -1,4 +1,4 @@
-package gift.academic.promo_it.services.converters;
+package gift.academic.promo_it.mappers;
 
 import gift.academic.promo_it.dtos.RegisterResponseDto;
 import gift.academic.promo_it.models.User;

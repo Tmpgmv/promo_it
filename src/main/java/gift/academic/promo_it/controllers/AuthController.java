@@ -1,6 +1,5 @@
 package gift.academic.promo_it.controllers;
 
-import gift.academic.promo_it.constants.Role;
 import gift.academic.promo_it.dtos.LoginRequestDto;
 import gift.academic.promo_it.dtos.LoginResponseDto;
 import gift.academic.promo_it.dtos.RegisterRequestDto;
@@ -8,12 +7,11 @@ import gift.academic.promo_it.dtos.RegisterResponseDto;
 import gift.academic.promo_it.models.User;
 import gift.academic.promo_it.services.JwtService;
 import gift.academic.promo_it.services.UserService;
-import gift.academic.promo_it.services.converters.UserToRegisterResponse;
+import gift.academic.promo_it.mappers.UserToRegisterResponse;
 import gift.academic.promo_it.validators.PasswordValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,14 +20,14 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 @RequestMapping("auth")
 @CrossOrigin // См. комментарий к WebConfig.
-public class Auth {
-    private static final Logger logger = LoggerFactory.getLogger(Auth.class);
+public class AuthController {
+    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
     private final UserService userService;
     private final UserToRegisterResponse userToRegisterResponse;
     private final PasswordValidator passwordValidator;
     private final JwtService jwtService;
 
-    public Auth(UserService userService, UserToRegisterResponse userToRegisterResponse, PasswordValidator passwordValidator, JwtService jwtService) {
+    public AuthController(UserService userService, UserToRegisterResponse userToRegisterResponse, PasswordValidator passwordValidator, JwtService jwtService) {
         this.userService = userService;
         this.userToRegisterResponse = userToRegisterResponse;
         this.passwordValidator = passwordValidator;

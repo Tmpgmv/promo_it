@@ -7,18 +7,19 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public class UserRepository {
     private final String tableName = "application_user";
     private final JdbcTemplate jdbcTemplate;
-    private final PasswordEncoder passwordEncoder;
+
     private final RowMapper<User> userRowMapper; // Объявляем, но инициализируем в конструкторе
 
     public UserRepository(JdbcTemplate jdbcTemplate, PasswordEncoder passwordEncoder) {
         this.jdbcTemplate = jdbcTemplate;
-        this.passwordEncoder = passwordEncoder;
+
 
         // Инициализация маппера здесь гарантирует, что passwordEncoder уже готов к работе
         this.userRowMapper = (rs, rowNum) -> {
@@ -72,5 +73,10 @@ public class UserRepository {
 
         user.setId(id);
         return user;
+    }
+
+    public List<User> selectOrdinaryUsers() {
+        String sql = String.format("SELECT id, login, password, role FROM %s WHERE role = ?", tableName);
+        return jdbcTemplate.query(sql, userRowMapper, Role.ORDINARY.getSlug());
     }
 }
