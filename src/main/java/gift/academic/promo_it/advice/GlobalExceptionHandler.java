@@ -1,11 +1,10 @@
 package gift.academic.promo_it.advice;
 
-import gift.academic.promo_it.exceptions.AdminExistsException;
-import gift.academic.promo_it.exceptions.LoginOccupiedException;
-import gift.academic.promo_it.exceptions.WeakPasswordException;
+import gift.academic.promo_it.exceptions.*;
 import org.springframework.http.HttpStatus;
 
 import org.springframework.http.ProblemDetail;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -40,4 +39,25 @@ public class GlobalExceptionHandler {
         // 409 Conflict
         return getProblemDetail(HttpStatus.CONFLICT, ex);
     }
+
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ProblemDetail> handle(UserNotFoundException ex) {
+        // 404
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
+                HttpStatus.NOT_FOUND, ex.getMessage());
+        problem.setTitle("User Not Found");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(problem);
+    }
+
+
+    @ExceptionHandler(AdminDeletionForbiddenException.class)
+    public ResponseEntity<ProblemDetail> handle(AdminDeletionForbiddenException ex) {
+        // 403
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
+                HttpStatus.FORBIDDEN, ex.getMessage());
+        problem.setTitle("Action Forbidden");
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(problem);
+    }
+
 }

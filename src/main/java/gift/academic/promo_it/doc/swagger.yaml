@@ -15,7 +15,6 @@ tags:
     description: Конфигурация OTP. Доступно только пользователям с ролью ADMIN.
   - name: Users
     description: Управление пользователями
-
 paths:
   /users/list:
     get:
@@ -37,6 +36,36 @@ paths:
                   $ref: '#/components/schemas/UserResponse'
         '403':
           description: Доступ запрещен
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+  /users/{id}:
+    delete:
+      x-role-required: ADMIN
+      tags:
+        - Users
+      summary: Удалить пользователя по ID
+      description: Удаляет пользователя из системы. Доступно только для ADMIN. Администратора удалить нельзя (бизнес-логика).
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID пользователя для удаления
+          schema:
+            type: integer
+            format: int64
+      security:
+        - bearerAuth: []
+      responses:
+        '204':
+          description: Пользователь успешно удален
+        '401':
+          description: Не авторизован
+        '403':
+          description: Доступ запрещен (недостаточно прав)
+        '404':
+          description: Пользователь не найден
           content:
             application/problem+json:
               schema:
@@ -144,7 +173,6 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
-
   /auth/login:
     post:
       tags:
@@ -193,8 +221,6 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
-
-
   schemas:
     UserResponse:
       type: object
@@ -207,7 +233,6 @@ components:
         role:
           type: string
           enum: ["ordinary"]
-
     RegisterRequest:
       type: object
       required: [login, password, role]
@@ -223,7 +248,6 @@ components:
         role:
           type: string
           enum: ["admin", "ordinary"]
-
     RegisterResponse:
       type: object
       required: [id, login, role]
@@ -236,7 +260,6 @@ components:
         role:
           type: string
           enum: ["admin", "ordinary"]
-
     LoginRequest:
       type: object
       required: [login, password]
@@ -248,7 +271,6 @@ components:
           type: string
           format: password
           example: "StrongPass123!"
-
     LoginResponse:
       type: object
       required: [token, login]
@@ -261,7 +283,6 @@ components:
           type: integer
           description: Срок действия в секундах
           example: 3600
-
     OtpConfigResponse:
       type: object
       required:
@@ -281,7 +302,6 @@ components:
           minimum: 4
           description: Количество знаков в OTP
           example: 6
-
     OtpConfigUpdateRequest:
       type: object
       required:
@@ -297,7 +317,6 @@ components:
           minimum: 4
           description: Количество знаков в OTP
           example: 6
-
     ProblemDetail:
       type: object
       required: [status, title]

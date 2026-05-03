@@ -1,25 +1,31 @@
 package gift.academic.promo_it.controllers;
 
+import gift.academic.promo_it.constants.Role;
 import gift.academic.promo_it.dtos.UserResponseDto;
 import gift.academic.promo_it.mappers.UserListToUserResponse;
 import gift.academic.promo_it.mappers.UserToRegisterResponse;
 import gift.academic.promo_it.models.User;
 import gift.academic.promo_it.repositories.UserRepository;
+import gift.academic.promo_it.services.UserService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
+    private final UserService userService;
     private final UserRepository userRepository;
     private final UserListToUserResponse userListToUserResponse;
 
-    public UserController(UserRepository userRepository, UserToRegisterResponse userToRegisterResponse, UserListToUserResponse userListToUserResponse) {
+    public UserController(UserRepository userRepository, UserToRegisterResponse userToRegisterResponse, UserService userService, UserListToUserResponse userListToUserResponse) {
         this.userRepository = userRepository;
+        this.userService = userService;
 
         this.userListToUserResponse = userListToUserResponse;
     }
@@ -32,4 +38,12 @@ public class UserController {
         List<UserResponseDto> result = userListToUserResponse.convert(ordinaryUsers);
         return result;
     }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+        userService.deleteUserById(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }

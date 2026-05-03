@@ -6,8 +6,10 @@ import gift.academic.promo_it.constants.Role;
 import gift.academic.promo_it.dtos.LoginRequestDto;
 import gift.academic.promo_it.dtos.LoginResponseDto;
 import gift.academic.promo_it.dtos.RegisterRequestDto;
+import gift.academic.promo_it.exceptions.AdminDeletionForbiddenException;
 import gift.academic.promo_it.exceptions.AdminExistsException;
 import gift.academic.promo_it.exceptions.LoginOccupiedException;
+import gift.academic.promo_it.exceptions.UserNotFoundException;
 import gift.academic.promo_it.models.User;
 import gift.academic.promo_it.repositories.UserRepository;
 import org.springframework.dao.DuplicateKeyException;
@@ -78,5 +80,14 @@ public class UserService {
         return new LoginResponseDto(token, user.getLogin(), (int) expiresIn.toSeconds());
     }
 
+    public void deleteUserById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User " + id + " not found."));
+        // Предотвращаем удаление администратора
+        if (user.getRole() == Role.ADMIN) {
+            throw new AdminDeletionForbiddenException("ADMIN can't be deleted");
+        }
+        userRepository.deleteById(id);
+    }
 
 }

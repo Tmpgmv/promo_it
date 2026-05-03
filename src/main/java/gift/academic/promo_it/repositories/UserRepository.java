@@ -1,6 +1,7 @@
 package gift.academic.promo_it.repositories;
 
 import gift.academic.promo_it.constants.Role;
+import gift.academic.promo_it.exceptions.UserNotFoundException;
 import gift.academic.promo_it.models.User;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -56,13 +57,13 @@ public class UserRepository {
      */
     public User save(User user) {
         String sql = String.format("""
-            INSERT INTO %s (login, password, role) 
-            VALUES (?, ?, ?) 
-            ON CONFLICT (login) DO UPDATE SET 
-            password = EXCLUDED.password, 
-            role = EXCLUDED.role
-            RETURNING id
-            """, tableName);
+                INSERT INTO %s (login, password, role) 
+                VALUES (?, ?, ?) 
+                ON CONFLICT (login) DO UPDATE SET 
+                password = EXCLUDED.password, 
+                role = EXCLUDED.role
+                RETURNING id
+                """, tableName);
 
         // Выполняем запрос и получаем ID сохраненной записи
         Long id = jdbcTemplate.queryForObject(sql, Long.class,
@@ -78,5 +79,17 @@ public class UserRepository {
     public List<User> selectOrdinaryUsers() {
         String sql = String.format("SELECT id, login, password, role FROM %s WHERE role = ?", tableName);
         return jdbcTemplate.query(sql, userRowMapper, Role.ORDINARY.getSlug());
+    }
+
+
+    public void deleteById(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("id is null");
+        }
+        String sql = String.format("DELETE FROM %s WHERE id = ?", tableName);
+        int rows = jdbcTemplate.update(sql, id);
+        if (rows == 0) {
+            throw new UserNotFoundException("User " + id + " not found.");
+        }
     }
 }
