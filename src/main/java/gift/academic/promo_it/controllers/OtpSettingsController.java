@@ -18,7 +18,7 @@ public class OtpSettingsController {
     }
 
     @GetMapping
-//    @PreAuthorize("hasAuthority('ADMIN')")
+        @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<OtpConfigResponseDto> getSettings() {
         return ResponseEntity.ok(OtpConfigResponseDto.fromModel(configService.getConfig()));
     }
