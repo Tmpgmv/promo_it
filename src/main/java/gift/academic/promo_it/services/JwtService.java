@@ -11,6 +11,8 @@ import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class JwtService {
@@ -55,5 +57,13 @@ public class JwtService {
 
     public long getExpirationInSeconds() {
         return expirationInSeconds;
+    }
+
+    private final Set<String> blacklist = ConcurrentHashMap.newKeySet();
+    public void invalidateToken(String token) {
+        blacklist.add(token);
+    }
+    public boolean isTokenBlacklisted(String token) {
+        return blacklist.contains(token);
     }
 }

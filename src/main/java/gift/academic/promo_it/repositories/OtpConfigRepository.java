@@ -11,6 +11,7 @@ import java.util.Optional;
 
 @Repository
 public class OtpConfigRepository {
+
     private final JdbcTemplate jdbcTemplate;
 
     public OtpConfigRepository(JdbcTemplate jdbcTemplate) {
@@ -18,16 +19,13 @@ public class OtpConfigRepository {
     }
 
     private final RowMapper<OtpConfig> rowMapper = (rs, rowNum) -> {
-        // 1. Get the raw PGInterval object from the result set
         PGInterval pgInterval = (PGInterval) rs.getObject("lifespan");
 
-        // 2. Convert PGInterval components to java.time.Duration
-        // PostgreSQL intervals track months, days, and seconds separately.
-        // For OTP lifespans, we focus on days and seconds (which includes hours/mins).
         Duration duration = Duration.ofDays(pgInterval.getDays())
                 .plusHours(pgInterval.getHours())
                 .plusMinutes(pgInterval.getMinutes())
                 .plusSeconds((long) pgInterval.getSeconds());
+
         return new OtpConfig(
                 rs.getLong("id"),
                 duration,
@@ -36,7 +34,6 @@ public class OtpConfigRepository {
     };
 
     public Optional<OtpConfig> findConfig() {
-        // Updated table name to 'otpconfig'
         String sql = "SELECT id, lifespan, number_of_symbols FROM otpconfig WHERE id = 1";
         return jdbcTemplate.query(sql, rowMapper).stream().findFirst();
     }
@@ -50,8 +47,7 @@ public class OtpConfigRepository {
                 number_of_symbols = EXCLUDED.number_of_symbols
             """;
 
-        // Pass duration.toString() or the object itself depending on driver support
-        // ?::interval explicitly tells Postgres to cast the string/object
+        // Исправлено: используем стандартные методы доступа рекорда
         jdbcTemplate.update(sql,
                 config.lifespan().toString(),
                 config.numberOfSymbols()
