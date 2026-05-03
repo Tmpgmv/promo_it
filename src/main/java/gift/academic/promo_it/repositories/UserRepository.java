@@ -1,10 +1,76 @@
 package gift.academic.promo_it.repositories;
 
+import gift.academic.promo_it.constants.Role;
 import gift.academic.promo_it.models.User;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-public interface UserRepository extends CrudRepository<User, Long> {
-    Optional<User> findByLogin(String login);
+@Repository
+public class UserRepository {
+    private final String tableName = "application_user";
+    private final JdbcTemplate jdbcTemplate;
+    private final PasswordEncoder passwordEncoder;
+    private final RowMapper<User> userRowMapper; // Объявляем, но инициализируем в конструкторе
+
+    public UserRepository(JdbcTemplate jdbcTemplate, PasswordEncoder passwordEncoder) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.passwordEncoder = passwordEncoder;
+
+        // Инициализация маппера здесь гарантирует, что passwordEncoder уже готов к работе
+        this.userRowMapper = (rs, rowNum) -> {
+            User user = new User();
+            user.setId(rs.getLong("id"));
+            user.setLogin(rs.getString("login"));
+            // Используем уже внедренный encoder
+            user.setPassword(rs.getString("password"));
+            user.setRole(Role.fromSlug(rs.getString("role")));
+            return user;
+        };
+    }
+
+    public Optional<User> findByLogin(String login) {
+        String sql = String.format("SELECT id, login, password, role FROM %s WHERE login = ?", tableName);
+
+        var user = jdbcTemplate.query(sql, userRowMapper, login)
+                .stream()
+                .findFirst();
+
+        return user;
+    }
+
+    public Optional<User> findById(Long id) {
+        if (id == null) return Optional.empty();
+        String sql = String.format("SELECT id, login, password, role FROM %s WHERE id = ?", tableName);
+        return jdbcTemplate.query(sql, userRowMapper, id)
+                .stream()
+                .findFirst();
+    }
+
+    /**
+     * Сохранение или обновление пользователя.     *
+     */
+    public User save(User user) {
+        String sql = String.format("""
+            INSERT INTO %s (login, password, role) 
+            VALUES (?, ?, ?) 
+            ON CONFLICT (login) DO UPDATE SET 
+            password = EXCLUDED.password, 
+            role = EXCLUDED.role
+            RETURNING id
+            """, tableName);
+
+        // Выполняем запрос и получаем ID сохраненной записи
+        Long id = jdbcTemplate.queryForObject(sql, Long.class,
+                user.getLogin(),
+                user.getPassword(),
+                user.getRole().getSlug() // Предполагаем использование слага роли
+        );
+
+        user.setId(id);
+        return user;
+    }
 }

@@ -25,12 +25,27 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation' // Для валидации, если нужно
 
 	// Драйвер базы данных
-	runtimeOnly 'org.postgresql:postgresql'
+	implementation 'org.postgresql:postgresql'
 
 	// Зависимости для тестирования
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
+
+	// API JJWT
+	implementation 'io.jsonwebtoken:jjwt-api:0.12.5'
+
+	// Реализация (нужна только в рантайме)
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.5'
+
+	// Поддержка JSON через Jackson (нужна только в рантайме)
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.5'
+
+	// Другие ваши зависимости...
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
 }
 
 tasks.named('test') {

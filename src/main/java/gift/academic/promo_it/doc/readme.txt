@@ -66,17 +66,17 @@ CREATE TABLE application_user (
 
 CREATE UNIQUE INDEX one_admin_only ON application_user(role) WHERE role = 'admin';
 
--- Таблица конфигурации OTP (не более 1 записи)
--- Отсутствовало в ТЗ - не меньше 4 символов для number_of_symbols.
 CREATE TABLE OtpConfig (
-    id SERIAL PRIMARY KEY,
+    -- Ограничение id = 1 гарантирует синглтон на уровне схемы
+    id INTEGER PRIMARY KEY CHECK (id = 1),
     lifespan INTERVAL NOT NULL,
-    number_of_symbols INTEGER NOT NULL CHECK (number_of_symbols > 3)
+    -- Бизнес-валидация: длина кода не менее 4 символов
+    number_of_symbols INTEGER NOT NULL CHECK (number_of_symbols >= 4)
 );
-
--- Уникальный индекс для обеспечения не более 1 строки в OtpConfig
--- Любая вторая вставка нарушит уникальность константы TRUE.
-CREATE UNIQUE INDEX one_row_only ON OtpConfig ((TRUE));
+-- Начальная инициализация (опционально)
+INSERT INTO OtpConfig (id, lifespan, number_of_symbols)
+VALUES (1, '5 minutes'::interval, 6)
+ON CONFLICT DO NOTHING;
 
 -- Таблица операций
 CREATE TABLE Operation (

@@ -6,11 +6,11 @@ public class RegisterRequestDto {
     private String role;
 
     public void setLogin(String login) {
-        this.login = login;
+        this.login = login.trim();
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.password = password.trim();
     }
 
     public void setRole(String role) {

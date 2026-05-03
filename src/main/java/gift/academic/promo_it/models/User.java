@@ -37,8 +37,8 @@ public class User {
         return password;
     }
 
-    public void setRawPassword(String rawPassword, PasswordEncoder encoder) {
-        this.password = encoder.encode(rawPassword);
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public Role getRole() {
