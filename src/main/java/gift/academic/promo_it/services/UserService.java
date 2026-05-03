@@ -15,6 +15,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.util.Optional;
 
 @Service
@@ -72,9 +73,9 @@ public class UserService {
         String token = jwtService.generateToken(user);
 
 
-        int expiresIn = (int) jwtService.getExpirationInSeconds();
+        Duration expiresIn = jwtService.getExpirationTime();
 
-        return new LoginResponseDto(token, user.getLogin(), expiresIn);
+        return new LoginResponseDto(token, user.getLogin(), (int) expiresIn.toSeconds());
     }
 
 

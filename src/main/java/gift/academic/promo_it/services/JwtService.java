@@ -1,6 +1,8 @@
 package gift.academic.promo_it.services;
 
+import gift.academic.promo_it.models.OtpConfig;
 import gift.academic.promo_it.models.User;
+import gift.academic.promo_it.repositories.OtpConfigRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -9,21 +11,29 @@ import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.Date;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class JwtService {
 
-    // Секрет должен быть длинным (минимум 32 символа для HS256).
-    // Храните его в application.properties
+        private final OtpConfigRepository otpConfigRepository;
+
+
     @Value("${jwt.secret}")
     private String secret;
 
-    @Value("${jwt.expiration:3600}")
+
     private long expirationInSeconds;
+
+    public JwtService(OtpConfigRepository otpConfigRepository) {
+        this.otpConfigRepository = otpConfigRepository;
+        expirationInSeconds = getExpirationTime().getSeconds();
+    }
 
     public String generateToken(User user) {
         SecretKey key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
@@ -55,8 +65,15 @@ public class JwtService {
                 .getPayload();
     }
 
-    public long getExpirationInSeconds() {
-        return expirationInSeconds;
+    public Duration getExpirationTime() {
+        Duration result = Duration.ofMinutes(5);
+        Optional<OtpConfig> otpConfig = otpConfigRepository.findConfig();
+
+        if (otpConfig.isPresent()) {
+            result = otpConfig.get().lifespan();
+        }
+
+        return result;
     }
 
     private final Set<String> blacklist = ConcurrentHashMap.newKeySet();
