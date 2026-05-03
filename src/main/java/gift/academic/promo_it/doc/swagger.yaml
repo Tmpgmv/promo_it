@@ -13,8 +13,34 @@ tags:
     description: Операции регистрации и входа
   - name: OTPSettings
     description: Конфигурация OTP. Доступно только пользователям с ролью ADMIN.
+  - name: Users
+    description: Управление пользователями
 
 paths:
+  /users:
+    get:
+      x-role-required: ADMIN
+      tags:
+        - Users
+      summary: Получить список всех пользователей (кроме администраторов)
+      description: Возвращает список пользователей с ролью 'ordinary'. Доступно только для ADMIN.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Список пользователей успешно получен
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserResponse'
+        '403':
+          description: Доступ запрещен
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
   /settings:
     get:
       x-role-required: ADMIN
@@ -29,7 +55,6 @@ paths:
       responses:
         '200':
           description: Текущая конфигурация OTP
-          # ... ваш контент ...
         '403':
           description: Доступ запрещен (требуется роль ADMIN)
           content:
@@ -171,6 +196,18 @@ components:
 
 
   schemas:
+    UserResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        login:
+          type: string
+        role:
+          type: string
+          enum: ["ordinary"]
+
     RegisterRequest:
       type: object
       required: [login, password, role]
