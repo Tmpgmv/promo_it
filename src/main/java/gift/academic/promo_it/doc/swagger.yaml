@@ -1,39 +1,117 @@
 openapi: 3.0.3
 info:
-  title: OTP Service API
-  version: 3.0.3
-  description: API для генерации OTP-кодов и управления настройками OTP.
+  title: Promo-IT Backend
+  description: "Spring Boot API для Promo-IT: регистрация пользователей с уникальным ADMIN и JWT аутентификация."
+  version: 1.0.0
+  contact:
+    name: Promo-IT Team
 servers:
-  - url: https://api.example.com
-    description: Продакшн
-
+  - url: http://localhost:8080
+    description: Development server
+tags:
+  - name: Authentication
+    description: Операции регистрации и входа
+  - name: OTPSettings
+    description: Конфигурация OTP. Доступно только пользователям с ролью ADMIN.
+  - name: Users
+    description: Управление пользователями
 paths:
-  /otp/settings:
+  /users/list:
     get:
+      x-role-required: ADMIN
       tags:
-        - OTPSettings
-      summary: Получить текущие настройки OTP
-      description: Возвращает текущие параметры конфигурации OTP
+        - Users
+      summary: Получить список всех пользователей (кроме администраторов)
+      description: Возвращает список пользователей с ролью 'ordinary'. Доступно только для ADMIN.
       security:
         - bearerAuth: []
       responses:
         '200':
-          description: Успешно
+          description: Список пользователей успешно получен
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserResponse'
+        '403':
+          description: Доступ запрещен
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+  /users/{id}:
+    delete:
+      x-role-required: ADMIN
+      tags:
+        - Users
+      summary: Удалить пользователя по ID
+      description: Удаляет пользователя из системы. Доступно только для ADMIN. Администратора удалить нельзя (бизнес-логика).
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID пользователя для удаления
+          schema:
+            type: integer
+            format: int64
+      security:
+        - bearerAuth: []
+      responses:
+        '204':
+          description: Пользователь успешно удален
+        '401':
+          description: Неавторизован
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+        '403':
+          description: Доступ запрещен (недостаточно прав)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+        '404':
+          description: Пользователь не найден
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+  /settings:
+    get:
+      x-role-required: ADMIN
+      tags:
+        - OTPSettings
+      summary: Получить текущую конфигурацию OTP
+      description: Возвращает параметры OTP (lifespan и количество символов). Доступно только ADMIN.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Текущая конфигурация OTP
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/OtpSettings'
+        '403':
+          description: Доступ запрещен (требуется роль ADMIN)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
         '401':
-          description: Неавторизованный доступ
+          description: Неавторизован
           content:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
     put:
+      x-role-required: ADMIN
       tags:
         - OTPSettings
-      summary: Обновить настройки OTP
-      description: Обновляет конфигурацию OTP (lifespan, numberOfSymbols и т.д.)
+      summary: Обновить конфигурацию OTP
+      description: Обновляет lifespan и number_of_symbols. Доступно только ADMIN. Таблица хранит не более одной записи.
       security:
         - bearerAuth: []
       requestBody:
@@ -44,24 +122,29 @@ paths:
               $ref: '#/components/schemas/OtpConfigUpdateRequest'
       responses:
         '200':
-          description: Настройки успешно обновлены
+          description: Обновленная конфигурация OTP
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/OtpSettings'
         '400':
-          description: Неверный формат или значения полей тела запроса
+          description: Валидация ошибок
           content:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
         '401':
-          description: Неавторизованный доступ
+          description: Unauthorized
           content:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
-
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
   /otp/generate:
     post:
       tags:
@@ -95,21 +178,179 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
-        '403':
-          description: Forbidden
+  /auth/register:
+    post:
+      tags:
+        - Authentication
+      summary: Регистрация пользователя
+      description: Создаёт пользователя с ролью ordinary или admin (если admin ещё нет).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+            examples:
+              validOrdinary:
+                summary: Валидный обычный пользователь
+                value:
+                  login: "user123"
+                  password: "StrongPass123!"
+                  role: "ordinary"
+              validAdmin:
+                summary: Создание админа (если ещё не существует)
+                value:
+                  login: "admin"
+                  password: "secretAdminPass"
+                  role: "admin"
+      responses:
+        '201':
+          description: Пользователь успешно создан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegisterResponse'
+        '400':
+          description: Ошибка валидации (слабый пароль или логин занят)
           content:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
-
+        '409':
+          description: Конфликт (Admin уже существует)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+  /auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: Аутентификация пользователя
+      description: Проверяет учетные данные и возвращает JWT-токен.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Успешный вход
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '401':
+          description: Неверный логин или пароль
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+  /auth/logout:
+    post:
+      tags:
+        - Authentication
+      summary: Выход пользователя
+      description: Деактивирует текущий JWT-токен (добавляет в blacklist на стороне сервера).
+      security:
+        - bearerAuth: []
+      responses:
+        '204':
+          description: Успешный выход (No Content)
+        '401':
+          description: Unauthorized
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
 components:
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
-
   schemas:
+    UserResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        login:
+          type: string
+        role:
+          type: string
+          enum: ["ordinary"]
+    RegisterRequest:
+      type: object
+      required: [login, password, role]
+      properties:
+        login:
+          type: string
+          minLength: 3
+        password:
+          type: string
+          minLength: 8
+          writeOnly: true
+          pattern: "^[a-zA-Z0-9!@#$%^&*()]{8,}$"
+        role:
+          type: string
+          enum: ["admin", "ordinary"]
+    RegisterResponse:
+      type: object
+      required: [id, login, role]
+      properties:
+        id:
+          type: integer
+          format: int64
+        login:
+          type: string
+        role:
+          type: string
+          enum: ["admin", "ordinary"]
+    LoginRequest:
+      type: object
+      required: [login, password]
+      properties:
+        login:
+          type: string
+          example: "user123"
+        password:
+          type: string
+          format: password
+          example: "StrongPass123!"
+    LoginResponse:
+      type: object
+      required: [token, login]
+      properties:
+        token:
+          type: string
+        login:
+          type: string
+        expiresIn:
+          type: integer
+          description: Срок действия в секундах
+          example: 3600
+    OtpConfigResponse:
+      type: object
+      required:
+        - id
+        - lifespan
+        - numberOfSymbols
+      properties:
+        id:
+          type: integer
+          format: int64
+        lifespan:
+          type: string
+          description: ISO-8601 duration (например, PT15M)
+          example: "PT15M"
+        numberOfSymbols:
+          type: integer
+          minimum: 4
+          description: Количество знаков в OTP
+          example: 6
     OtpConfigUpdateRequest:
       type: object
       required:
@@ -118,26 +359,30 @@ components:
       properties:
         lifespan:
           type: string
-          description: ISO-8601 продолжительность (например, PT15M)
+          description: ISO-8601 duration (например, PT15M)
           example: "PT15M"
         numberOfSymbols:
           type: integer
           minimum: 4
           description: Количество знаков в OTP
           example: 6
-
-    OtpConfigResponse:
+    ProblemDetail:
       type: object
+      required: [status, title]
       properties:
-        lifespan:
+        type:
           type: string
-          description: ISO-8601 продолжительность
-          example: "PT15M"
-        numberOfSymbols:
+          format: uri
+          default: "about:/blank"
+        title:
+          type: string
+        status:
           type: integer
-          description: Количество знаков в OTP
-          example: 6
-
+        detail:
+          type: string
+        instance:
+          type: string
+          format: uri
     OtpSettings:
       type: object
       properties:
@@ -145,7 +390,6 @@ components:
           type: boolean
         config:
           $ref: '#/components/schemas/OtpConfigResponse'
-
     OtpGenerateRequest:
       type: object
       required:
@@ -164,7 +408,6 @@ components:
             - email
             - push
           example: "sms"
-
     OtpGenerateResponse:
       type: object
       required:
@@ -179,18 +422,3 @@ components:
           type: string
           description: Способ доставки кода
           example: "sms"
-
-    ProblemDetail:
-      type: object
-      properties:
-        type:
-          type: string
-          description: Тип URI-совместимой ошибки
-        title:
-          type: string
-        status:
-          type: integer
-        detail:
-          type: string
-        instance:
-          type: string
