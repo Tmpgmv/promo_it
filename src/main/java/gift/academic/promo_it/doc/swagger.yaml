@@ -11,7 +11,7 @@ servers:
 tags:
   - name: Authentication
     description: Операции регистрации и входа
-  - name: OTPSettings
+  - name: OTP
     description: Конфигурация OTP. Доступно только пользователям с ролью ADMIN.
   - name: Users
     description: Управление пользователями
@@ -78,11 +78,11 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
-  /settings:
+  /otp/settings:
     get:
       x-role-required: ADMIN
       tags:
-        - OTPSettings
+        - OTP
       summary: Получить текущую конфигурацию OTP
       description: Возвращает параметры OTP (lifespan и количество символов). Доступно только ADMIN.
       security:
@@ -109,7 +109,7 @@ paths:
     put:
       x-role-required: ADMIN
       tags:
-        - OTPSettings
+        - OTP
       summary: Обновить конфигурацию OTP
       description: Обновляет lifespan и number_of_symbols. Доступно только ADMIN. Таблица хранит не более одной записи.
       security:
@@ -148,7 +148,7 @@ paths:
   /otp/generate:
     post:
       tags:
-        - OTPSettings
+        - OTP
       summary: Сгенерировать OTP код
       description: Генерирует и отправляет код согласно текущим настройкам. Доступно только авторизованным пользователям.
       security:
