@@ -12,7 +12,7 @@ tags:
   - name: Authentication
     description: Операции регистрации и входа
   - name: OTP
-    description: Конфигурация OTP. Доступно только пользователям с ролью ADMIN.
+    description: Работа с кодами OTP.
   - name: Users
     description: Управление пользователями
 paths:
