@@ -68,7 +68,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
         '401':
-          description: Неавторизован
+          description: Не авторизован
           content:
             application/problem+json:
               schema:
@@ -108,7 +108,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
         '401':
-          description: Неавторизован
+          description: Не авторизован
           content:
             application/problem+json:
               schema:
