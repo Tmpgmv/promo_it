@@ -55,11 +55,18 @@ paths:
           schema:
             type: integer
             format: int64
+            minimum: 1
       security:
         - bearerAuth: []
       responses:
         '204':
           description: Пользователь успешно удален
+        '400':
+          description: "Ошибка валидации: число меньше 1 или больше допустимого максимума"
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
         '401':
           description: Неавторизован
           content:
@@ -321,6 +328,28 @@ components:
       scheme: bearer
       bearerFormat: JWT
   schemas:
+    MediaMethod:
+      type: string
+      enum: [ sms, email, max, file ]
+      description: |
+        Способ доставки кода:
+        * `sms` - SMS сообщение
+        * `email` - Электронная почта
+        * `max` - Мессенджер Max
+        * `file` - Сохранение в файл
+      example: "sms"
+
+    # Общая схема для ID операций и пользователей
+    PositiveInt64:
+      type: integer
+      format: int64
+      minimum: 1
+      description: "Положительное целое число (ID). Должно быть > 0."
+    OtpCode:
+      type: string
+      pattern: '^[0-9]{4,10}$' # Только цифры, длина от 4 до 10
+      example: "0512"
+      description: "OTP код. Передается как строка, чтобы сохранить ведущие нули."
     UserResponse:
       type: object
       properties:
@@ -431,22 +460,12 @@ components:
           format: uri
     OtpGenerateRequest:
       type: object
-      required:
-        - operationId
-        - media
+      required: [operationId, media]
       properties:
         operationId:
-          type: integer
-          description: Уникальный номер операции
-          example: 1
+          $ref: '#/components/schemas/PositiveInt64'
         media:
-          type: string
-          description: Способ получения кода
-          enum:
-            - sms
-            - email
-            - push
-          example: "sms"
+          $ref: '#/components/schemas/MediaMethod'
     OtpGenerateResponse:
       type: object
       required:
@@ -454,13 +473,10 @@ components:
         - media
       properties:
         code:
-          type: integer
-          description: Сгенерированный OTP код
-          example: 6087
+          $ref: '#/components/schemas/OtpCode'
         media:
-          type: string
-          description: Способ доставки кода
-          example: "sms"
+          $ref: '#/components/schemas/MediaMethod'
+
     OtpValidateRequest:
       type: object
       required:
@@ -468,10 +484,6 @@ components:
         - otpCode
       properties:
         operationId:
-          type: integer
-          description: Уникальный номер операции из запроса генерации
-          example: 1
+          $ref: '#/components/schemas/PositiveInt64'
         otpCode:
-          type: integer
-          description: Код, полученный пользователем
-          example: 6087
+          $ref: '#/components/schemas/OtpCode'
