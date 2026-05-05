@@ -178,6 +178,56 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
+  /otp/validate:
+    post:
+      tags:
+        - OTP
+      summary: Проверить OTP код
+      description: |
+        Проверяет OTP код по ID операции. 
+        Логика:
+        1. Поиск активной записи по operationId.
+        2. Проверка соответствия кода.
+        3. Проверка срока действия (TTL).
+        При успехе статус кода меняется на USED.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OtpValidateRequest'
+      responses:
+        '200':
+          description: Код успешно проверен
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "OTP validated successfully"
+        '400':
+          description: Неверный формат данных или код не совпадает
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+        '403':
+          description: Код просрочен (EXPIRED) или не найден
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+        '401':
+          description: Не авторизован
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+
   /auth/register:
     post:
       tags:
@@ -386,9 +436,9 @@ components:
         - media
       properties:
         operationId:
-          type: string
+          type: integer
           description: Уникальный номер операции
-          example: "OP-12345"
+          example: 1
         media:
           type: string
           description: Способ получения кода
@@ -411,3 +461,17 @@ components:
           type: string
           description: Способ доставки кода
           example: "sms"
+    OtpValidateRequest:
+      type: object
+      required:
+        - operationId
+        - otpCode
+      properties:
+        operationId:
+          type: integer
+          description: Уникальный номер операции из запроса генерации
+          example: 1
+        otpCode:
+          type: integer
+          description: Код, полученный пользователем
+          example: 6087
