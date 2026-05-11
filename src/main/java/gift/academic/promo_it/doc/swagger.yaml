@@ -133,7 +133,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/OtpSettings'
+                $ref: '#/components/schemas/OtpConfigResponse'
         '400':
           description: Валидация ошибок
           content:
@@ -254,12 +254,14 @@ paths:
                   login: "user123"
                   password: "StrongPass123!"
                   role: "ordinary"
+                  email: "ordinary@example.com"
               validAdmin:
                 summary: Создание админа (если ещё не существует)
                 value:
                   login: "admin"
                   password: "secretAdminPass"
                   role: "admin"
+                  email: "admin@examle.com"
       responses:
         '201':
           description: Пользователь успешно создан
@@ -268,7 +270,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/RegisterResponse'
         '400':
-          description: Ошибка валидации (слабый пароль или логин занят)
+          description: Ошибка валидации (слабый пароль, логин занят, неполный набор данных и т.п.)
           content:
             application/problem+json:
               schema:
@@ -363,7 +365,7 @@ components:
           enum: ["ordinary"]
     RegisterRequest:
       type: object
-      required: [login, password, role]
+      required: [login, password, role, email]
       properties:
         login:
           type: string
@@ -376,6 +378,11 @@ components:
         role:
           type: string
           enum: ["admin", "ordinary"]
+        email:
+          type: string
+          format: email
+          pattern: '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'
+          example: "user@example.com"
     RegisterResponse:
       type: object
       required: [id, login, role]

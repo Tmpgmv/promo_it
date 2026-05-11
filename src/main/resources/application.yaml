@@ -30,3 +30,8 @@ logging:
 
 jwt:
   secret: "z6V6yB8pL2mR4xT9qW1vN5cN8zQ0xY3hA7bV4mK1pL9sR2tW"
+
+
+telegram:
+  botUsername: MegaVerificationBot
+  token: 8315203518:AAGWd2ZZ-PNdjC8q0KsG35ajjMgNHZd8C5g

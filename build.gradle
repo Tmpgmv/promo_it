@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.5.14'
 	id 'io.spring.dependency-management' version '1.1.7'
+	id 'application'
 }
 
 group = 'gift.academic'
@@ -46,8 +47,18 @@ dependencies {
 	// Другие ваши зависимости...
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	// Telegram
+
+	implementation 'org.telegram:telegrambots:6.9.0'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+
+application {
+	mainClass = 'TelegramBot'
+}
+

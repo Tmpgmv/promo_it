@@ -8,6 +8,7 @@ User
 id
 login
 password // Хешированный
+email
 role
 
 
@@ -61,6 +62,7 @@ CREATE TABLE application_user (
     id SERIAL PRIMARY KEY,
     login VARCHAR(255) NOT NULL UNIQUE,
     password TEXT NOT NULL,
+    email VARCHAR(150) NOT NULL
     role VARCHAR(50) NOT NULL
 );
 

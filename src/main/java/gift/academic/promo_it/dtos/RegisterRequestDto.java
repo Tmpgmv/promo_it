@@ -4,6 +4,7 @@ public class RegisterRequestDto {
     private String login;
     private String password;
     private String role;
+    private String email;
 
     public void setLogin(String login) {
         this.login = login.trim();
@@ -22,10 +23,12 @@ public class RegisterRequestDto {
 
     public RegisterRequestDto(String login,
                               String password,
-                              String role) {
+                              String role,
+                              String email) {
         this.login = login;
         this.role = role;
         this.password = password;
+        this.email = email;
     }
 
     public String getLogin() {
@@ -38,5 +41,13 @@ public class RegisterRequestDto {
 
     public String getRole() {
         return role;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
