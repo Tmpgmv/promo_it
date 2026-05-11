@@ -1,20 +1,15 @@
 package gift.academic.promo_it.controllers;
 
-import gift.academic.promo_it.constants.Role;
-import gift.academic.promo_it.dtos.UserResponseDto;
+import gift.academic.promo_it.dtos.users.UserResponseDto;
 import gift.academic.promo_it.mappers.UserListToUserResponse;
 import gift.academic.promo_it.mappers.UserToRegisterResponse;
 import gift.academic.promo_it.models.User;
 import gift.academic.promo_it.repositories.UserRepository;
 import gift.academic.promo_it.services.UserService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")

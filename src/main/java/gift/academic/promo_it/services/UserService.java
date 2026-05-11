@@ -3,9 +3,9 @@ package gift.academic.promo_it.services;
 
 
 import gift.academic.promo_it.constants.Role;
-import gift.academic.promo_it.dtos.LoginRequestDto;
-import gift.academic.promo_it.dtos.LoginResponseDto;
-import gift.academic.promo_it.dtos.RegisterRequestDto;
+import gift.academic.promo_it.dtos.auth.LoginRequestDto;
+import gift.academic.promo_it.dtos.auth.LoginResponseDto;
+import gift.academic.promo_it.dtos.auth.RegisterRequestDto;
 import gift.academic.promo_it.exceptions.AdminDeletionForbiddenException;
 import gift.academic.promo_it.exceptions.AdminExistsException;
 import gift.academic.promo_it.exceptions.LoginOccupiedException;

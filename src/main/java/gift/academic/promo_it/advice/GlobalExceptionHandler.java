@@ -60,4 +60,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(problem);
     }
 
+
+    @ExceptionHandler(InvalidRequestException.class)
+    public ResponseEntity<ProblemDetail> handle(InvalidRequestException ex) {
+        // 400
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
+                HttpStatus.BAD_REQUEST, ex.getMessage());
+        problem.setTitle("Bad request");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(problem);
+    }
+
 }

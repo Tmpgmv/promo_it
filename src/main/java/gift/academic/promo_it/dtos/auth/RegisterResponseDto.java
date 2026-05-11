@@ -1,6 +1,5 @@
-package gift.academic.promo_it.dtos;
+package gift.academic.promo_it.dtos.auth;
 
-import gift.academic.promo_it.constants.Role;
 import gift.academic.promo_it.models.User;
 
 public class RegisterResponseDto {

@@ -1,4 +1,4 @@
-package gift.academic.promo_it.dtos;
+package gift.academic.promo_it.dtos.otp;
 
 import gift.academic.promo_it.models.OtpConfig;
 

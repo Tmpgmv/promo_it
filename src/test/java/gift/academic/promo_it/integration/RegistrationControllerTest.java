@@ -1,7 +1,7 @@
 package gift.academic.promo_it.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gift.academic.promo_it.dtos.RegisterRequestDto;
+import gift.academic.promo_it.dtos.auth.RegisterRequestDto;
 import gift.academic.promo_it.exceptions.AdminExistsException;
 import gift.academic.promo_it.exceptions.LoginOccupiedException;
 import gift.academic.promo_it.exceptions.WeakPasswordException;

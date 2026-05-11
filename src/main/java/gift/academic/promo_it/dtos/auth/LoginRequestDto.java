@@ -1,4 +1,4 @@
-package gift.academic.promo_it.dtos;
+package gift.academic.promo_it.dtos.auth;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

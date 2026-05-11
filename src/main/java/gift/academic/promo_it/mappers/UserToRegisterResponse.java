@@ -1,6 +1,6 @@
 package gift.academic.promo_it.mappers;
 
-import gift.academic.promo_it.dtos.RegisterResponseDto;
+import gift.academic.promo_it.dtos.auth.RegisterResponseDto;
 import gift.academic.promo_it.models.User;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package gift.academic.promo_it.dtos;
+package gift.academic.promo_it.dtos.auth;
 
 
 

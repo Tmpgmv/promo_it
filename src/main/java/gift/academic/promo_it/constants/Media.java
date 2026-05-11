@@ -1,16 +1,31 @@
 package gift.academic.promo_it.constants;
 
-public enum Media {
-    SMS("sms", "SMS"),
-    EMAIL("email", "Email"),
-    MESSENGER("max", "Max"),
-    FILE("file", "Файл");
+import gift.academic.promo_it.exceptions.InvalidRequestException;
 
-    Media(String slug, String media) {
-        this.slug = slug;
-        this.media = media;
-    }
+import java.util.Locale;
+
+public enum Media {
+    SMS("sms"),
+    EMAIL("email"),
+    MESSENGER("messenger"),
+    FILE("file");
 
     private final String slug;
-    private final String media;
+
+    Media(String slug) {
+        this.slug = slug;
+    }
+
+    public static Media fromSlug(String slug) {
+        for (Media s : Media.values()) {
+            if (s.slug.equalsIgnoreCase(slug.trim())) {
+                return s;
+            }
+        }
+        throw new InvalidRequestException("Wrong media.");
+    }
+
+    public String toString() {
+        return slug.toLowerCase(Locale.ROOT);
+    }
 }

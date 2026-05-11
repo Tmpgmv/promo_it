@@ -1,9 +1,9 @@
 package gift.academic.promo_it.controllers;
 
-import gift.academic.promo_it.dtos.LoginRequestDto;
-import gift.academic.promo_it.dtos.LoginResponseDto;
-import gift.academic.promo_it.dtos.RegisterRequestDto;
-import gift.academic.promo_it.dtos.RegisterResponseDto;
+import gift.academic.promo_it.dtos.auth.LoginRequestDto;
+import gift.academic.promo_it.dtos.auth.LoginResponseDto;
+import gift.academic.promo_it.dtos.auth.RegisterRequestDto;
+import gift.academic.promo_it.dtos.auth.RegisterResponseDto;
 import gift.academic.promo_it.models.User;
 import gift.academic.promo_it.services.JwtService;
 import gift.academic.promo_it.services.UserService;

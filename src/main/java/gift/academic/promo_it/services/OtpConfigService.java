@@ -1,6 +1,6 @@
 package gift.academic.promo_it.services;
 
-import gift.academic.promo_it.dtos.OtpConfigUpdateRequestDto;
+import gift.academic.promo_it.dtos.otp.OtpConfigUpdateRequestDto;
 import gift.academic.promo_it.models.OtpConfig;
 import gift.academic.promo_it.repositories.OtpConfigRepository;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package gift.academic.promo_it.dtos;
+package gift.academic.promo_it.dtos.otp;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

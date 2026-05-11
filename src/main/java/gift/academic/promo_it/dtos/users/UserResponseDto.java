@@ -1,4 +1,4 @@
-package gift.academic.promo_it.dtos;
+package gift.academic.promo_it.dtos.users;
 
 import gift.academic.promo_it.constants.Role;
 import gift.academic.promo_it.models.User;
