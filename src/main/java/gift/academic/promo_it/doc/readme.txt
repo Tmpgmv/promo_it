@@ -102,9 +102,13 @@ ON CONFLICT DO NOTHING;
 -- Таблица кодов
 CREATE TABLE Code (
     id SERIAL PRIMARY KEY,
-    timestamp TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
     code VARCHAR(255) NOT NULL UNIQUE,
-    operation_id INTEGER NOT NULL REFERENCES Operation(id) ON DELETE CASCADE
+    operation_id INTEGER NOT NULL REFERENCES Operation(id) ON DELETE CASCADE,
+    user_id INTEGER NOT NULL REFERENCES application_user(id) ON DELETE CASCADE,
+    status VARCHAR(255) NOT NULL DEFAULT 'active',
+
+    CONSTRAINT chk_status CHECK (status IN ('active', 'expired', 'used'))
 );
 
 
