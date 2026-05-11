@@ -1,6 +1,7 @@
 package gift.academic.promo_it.models;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 @Table("operation")
@@ -17,18 +18,19 @@ public class Operation {
     private Long id;
 
     public String getOperationName() {
-        return operation_name;
+        return operationName;
     }
 
     public void setOperationName(String operationName) {
-        this.operation_name = operationName;
+        this.operationName = operationName;
     }
 
-    String operation_name;
+    @Column("operation_name")
+    String operationName;
 
     public Operation() {}
 
     public Operation(String operation_name) {
-        this.operation_name = operation_name;
+        this.operationName = operation_name;
     }
 }
