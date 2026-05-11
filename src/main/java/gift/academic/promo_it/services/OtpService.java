@@ -14,25 +14,27 @@ import java.util.Optional;
 public class OtpService {
 
     private final OtpConfigRepository repository;
+    private final OtpConfigService otpConfigService;
     private final SecureRandom random = new SecureRandom();
 
     // Дефолтные значения на случай отсутствия конфига
     private static final Duration DEFAULT_LIFESPAN = Duration.ofMinutes(5);
     private static final int DEFAULT_SYMBOLS = 6;
 
-    public OtpService(OtpConfigRepository repository) {
+    public OtpService(OtpConfigRepository repository, OtpConfigService otpConfigService) {
         this.repository = repository;
+        this.otpConfigService = otpConfigService;
     }
 
-    /**
-     * Получает текущую конфигурацию или создает дефолтную, если её нет.
-     */
-    public OtpConfig getEffectiveConfig() {
-        return repository.findConfig().orElseGet(() -> {
-            repository.initializeDefaultIfAbsent(DEFAULT_LIFESPAN, DEFAULT_SYMBOLS);
-            return new OtpConfig(1L, DEFAULT_LIFESPAN, DEFAULT_SYMBOLS);
-        });
-    }
+//    /**
+//     * Получает текущую конфигурацию или создает дефолтную, если её нет.
+//     */
+//    public OtpConfig getEffectiveConfig() {
+//        return repository.findConfig().orElseGet(() -> {
+//            repository.initializeDefaultIfAbsent(DEFAULT_LIFESPAN, DEFAULT_SYMBOLS);
+//            return new OtpConfig(1L, DEFAULT_LIFESPAN, DEFAULT_SYMBOLS);
+//        });
+//    }
 
     /**
      * Обновляет настройки OTP.
@@ -50,7 +52,7 @@ public class OtpService {
      * Генерирует новый случайный цифровой код на основе текущих настроек.
      */
     public String generateCode() {
-        OtpConfig config = getEffectiveConfig();
+        OtpConfig config = otpConfigService.getConfig();
         int length = config.numberOfSymbols();
 
         StringBuilder sb = new StringBuilder(length);
@@ -66,7 +68,7 @@ public class OtpService {
      * @return true, если пароль еще годен
      */
     public boolean isOtpValid(Instant createdAt) {
-        OtpConfig config = getEffectiveConfig();
+        OtpConfig config = otpConfigService.getConfig();
         Instant now = Instant.now();
         Duration elapsed = Duration.between(createdAt, now);
 

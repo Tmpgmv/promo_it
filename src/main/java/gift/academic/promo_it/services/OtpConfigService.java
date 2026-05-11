@@ -3,6 +3,7 @@ package gift.academic.promo_it.services;
 import gift.academic.promo_it.dtos.otp.OtpConfigUpdateRequestDto;
 import gift.academic.promo_it.models.OtpConfig;
 import gift.academic.promo_it.repositories.OtpConfigRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,10 +14,17 @@ public class OtpConfigService {
 
     private final OtpConfigRepository repository;
 
-    // Константы для настроек по умолчанию
-    private static final long CONFIG_ID = 1L;
-    private static final Duration DEFAULT_LIFESPAN = Duration.ofMinutes(5);
-    private static final int DEFAULT_SYMBOLS = 6;
+
+    private final long CONFIG_ID = 1;
+
+    @Value("${otpconfig.lifespan}")
+    private int lifespan;
+    private Duration lifespanDuratin = Duration.ofMinutes(lifespan);
+
+    @Value("${otpconfig.number_of_symbols}")
+    private int number_of_symbols;
+
+
 
     public OtpConfigService(OtpConfigRepository repository) {
         this.repository = repository;
@@ -49,19 +57,10 @@ public class OtpConfigService {
     }
 
     /**
-     * Сброс настроек к заводским значениям.
-     */
-    @Transactional
-    public void resetToDefault() {
-        OtpConfig defaultConfig = new OtpConfig(CONFIG_ID, DEFAULT_LIFESPAN, DEFAULT_SYMBOLS);
-        repository.save(defaultConfig);
-    }
-
-    /**
      * Вспомогательный метод для первичной инициализации.
      */
     private OtpConfig initializeAndGetDefault() {
-        repository.initializeDefaultIfAbsent(DEFAULT_LIFESPAN, DEFAULT_SYMBOLS);
-        return new OtpConfig(CONFIG_ID, DEFAULT_LIFESPAN, DEFAULT_SYMBOLS);
+        repository.initializeDefaultIfAbsent(lifespanDuratin, number_of_symbols);
+        return new OtpConfig(CONFIG_ID, lifespanDuratin, number_of_symbols);
     }
 }

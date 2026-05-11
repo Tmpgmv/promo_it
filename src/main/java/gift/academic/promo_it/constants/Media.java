@@ -25,7 +25,11 @@ public enum Media {
         throw new InvalidRequestException("Wrong media.");
     }
 
-    public String toString() {
-        return slug.toLowerCase(Locale.ROOT);
+    public String getSlug() {
+        return slug;
     }
+//    @Override
+//    public String toString() {
+//        return slug;
+//    }
 }

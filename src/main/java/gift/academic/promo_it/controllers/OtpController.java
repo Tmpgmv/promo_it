@@ -6,6 +6,7 @@ import gift.academic.promo_it.dtos.otp.OtpGenerateRequestDto;
 import gift.academic.promo_it.dtos.otp.OtpGenerateResponseDto;
 import gift.academic.promo_it.services.EmailService;
 import gift.academic.promo_it.services.OtpConfigService;
+import gift.academic.promo_it.services.OtpService;
 import gift.academic.promo_it.validators.OtpRequestValidationService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -20,13 +21,15 @@ public class OtpController {
 
     private final OtpRequestValidationService validationService;
     private final OtpConfigService configService;
+    private final OtpService otpService;
     private final EmailService emailService;
 
     public OtpController(OtpRequestValidationService validationService,
-                         OtpConfigService configService,
+                         OtpConfigService configService, OtpService otpService,
                          EmailService emailService) {
         this.validationService = validationService;
         this.configService = configService;
+        this.otpService = otpService;
         this.emailService = emailService;
     }
 
@@ -49,8 +52,15 @@ public class OtpController {
     @PostMapping("/generate")
     public ResponseEntity<OtpGenerateResponseDto> generate(@Valid @RequestBody OtpGenerateRequestDto request) {
         validationService.validateOtpGenerateRequest(request);
-        emailService.sendEmail("grabl@mail.ru", "3333");
-        return ResponseEntity.ok(new OtpGenerateResponseDto("234", "email"));
+
+        String code = otpService.generateCode();
+
+        switch(Media.fromSlug(request.media())) {
+            case EMAIL -> emailService.sendEmail("grabl@mail.ru", code);
+        }
+
+
+        return ResponseEntity.ok(new OtpGenerateResponseDto(code, request.media()));
     }
 
 }
