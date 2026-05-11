@@ -32,7 +32,7 @@ public class UserController {
 
 
     @GetMapping("/list")
-    @PreAuthorize("hasAuthority('ADMIN')")
+//    @PreAuthorize("hasAuthority('ADMIN')")
     public List<UserResponseDto> getList() {
         List<User> ordinaryUsers = userRepository.selectOrdinaryUsers();
         List<UserResponseDto> result = userListToUserResponse.convert(ordinaryUsers);
@@ -40,7 +40,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
+//    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
         userService.deleteUserById(id);
         return ResponseEntity.noContent().build();

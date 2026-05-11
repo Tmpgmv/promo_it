@@ -44,7 +44,12 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/telegram/**").permitAll()
+                        .requestMatchers("/email").permitAll()
+
+                        .requestMatchers("/otp/**").permitAll()
+                        .requestMatchers("/users/**").permitAll()
+                        .requestMatchers("/operation/**").permitAll()
+
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(new TokenFilter(jwtService), UsernamePasswordAuthenticationFilter.class);

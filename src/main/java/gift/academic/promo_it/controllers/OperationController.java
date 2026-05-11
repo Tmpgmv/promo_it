@@ -23,7 +23,7 @@ public class OperationController {
     }
 
     @GetMapping("/all")
-    @PreAuthorize("hasAuthority('ORDINARY')")
+//    @PreAuthorize("hasAuthority('ORDINARY')")
     public List<Operation> getAllOperations() {
         List<Operation> operations = operationRepository.findAll();
         return operations;

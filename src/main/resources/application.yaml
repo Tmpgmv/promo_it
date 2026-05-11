@@ -1,4 +1,19 @@
 spring:
+  mail:
+    host: smtp.mail.ru
+    port: 587
+    username: tmpgmv@mail.ru
+    password: TgKLSA0uOG7gh2j7rAMl     # Пароль приложения
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
   application:
     name: promo_it
     debug: true
@@ -32,7 +47,8 @@ jwt:
   secret: "z6V6yB8pL2mR4xT9qW1vN5cN8zQ0xY3hA7bV4mK1pL9sR2tW"
   expirationPeriodInMinutes: 15
 
+otpconfig:
+  lifespan: 5
+  number_of_symbols: 4
 
-#telegram:
-#  botUsername: MegaVerificationBot
-#  token: 8315203518:AAGWd2ZZ-PNdjC8q0KsG35ajjMgNHZd8C5g
+
