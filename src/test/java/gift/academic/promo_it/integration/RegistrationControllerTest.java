@@ -121,7 +121,7 @@ public class RegistrationControllerTest {
         mockMvc.perform(post(getUrl())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDto)))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isConflict());
     }
 
     /**

@@ -18,8 +18,8 @@ public class OtpService {
     private final SecureRandom random = new SecureRandom();
 
     // Дефолтные значения на случай отсутствия конфига
-    private static final Duration DEFAULT_LIFESPAN = Duration.ofMinutes(5);
-    private static final int DEFAULT_SYMBOLS = 6;
+//    private static final Duration DEFAULT_LIFESPAN = Duration.ofMinutes(5);
+//    private static final int DEFAULT_SYMBOLS = 6;
 
     public OtpService(OtpConfigRepository repository, OtpConfigService otpConfigService) {
         this.repository = repository;
@@ -36,17 +36,17 @@ public class OtpService {
 //        });
 //    }
 
-    /**
-     * Обновляет настройки OTP.
-     */
-    @Transactional
-    public void updateConfiguration(Duration lifespan, int numberOfSymbols) {
-        if (numberOfSymbols < 4) {
-            throw new IllegalArgumentException("Количество символов должно быть не менее 4");
-        }
-        OtpConfig newConfig = new OtpConfig(1L, lifespan, numberOfSymbols);
-        repository.save(newConfig);
-    }
+//    /**
+//     * Обновляет настройки OTP.
+//     */
+//    @Transactional
+//    public void updateConfiguration(Duration lifespan, int numberOfSymbols) {
+//        if (numberOfSymbols < 4) {
+//            throw new IllegalArgumentException("Количество символов должно быть не менее 4");
+//        }
+//        OtpConfig newConfig = new OtpConfig(1L, lifespan, numberOfSymbols);
+//        repository.save(newConfig);
+//    }
 
     /**
      * Генерирует новый случайный цифровой код на основе текущих настроек.
