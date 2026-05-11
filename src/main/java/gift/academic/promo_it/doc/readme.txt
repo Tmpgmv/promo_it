@@ -38,7 +38,7 @@ operation_name
 
 
 
-create database promo_it;
+
 create role promo_it with password 'awerdWdgy!24' login;
 postgres=# create database promo_it;
 \c promo_it
@@ -62,7 +62,7 @@ CREATE TABLE application_user (
     id SERIAL PRIMARY KEY,
     login VARCHAR(255) NOT NULL UNIQUE,
     password TEXT NOT NULL,
-    email VARCHAR(150) NOT NULL
+    email VARCHAR(150) NOT NULL,
     role VARCHAR(50) NOT NULL
 );
 
@@ -80,13 +80,24 @@ INSERT INTO OtpConfig (id, lifespan, number_of_symbols)
 VALUES (1, '5 minutes'::interval, 6)
 ON CONFLICT DO NOTHING;
 
+
 -- Таблица операций
 CREATE TABLE Operation (
     id SERIAL PRIMARY KEY,
     operation_name VARCHAR(255) NOT NULL UNIQUE
 );
 
-CREATE UNIQUE INDEX operation_name ON Operation ((TRUE));
+
+
+-- Начальная инициализация (опционально)
+INSERT INTO operation (operation_name)
+VALUES
+    ('Банковский перевод'),
+    ('Просмотр баланса'),
+    ('Запрос выписки об истории операций')
+ON CONFLICT DO NOTHING;
+
+
 
 -- Таблица кодов
 CREATE TABLE Code (

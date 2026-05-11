@@ -30,12 +30,13 @@ public class UserRepository {
             // Используем уже внедренный encoder
             user.setPassword(rs.getString("password"));
             user.setRole(Role.fromSlug(rs.getString("role")));
+            user.setEmail(rs.getString("email"));
             return user;
         };
     }
 
     public Optional<User> findByLogin(String login) {
-        String sql = String.format("SELECT id, login, password, role FROM %s WHERE login = ?", tableName);
+        String sql = String.format("SELECT * FROM %s WHERE login = ?", tableName);
 
         var user = jdbcTemplate.query(sql, userRowMapper, login)
                 .stream()
@@ -46,7 +47,7 @@ public class UserRepository {
 
     public Optional<User> findById(Long id) {
         if (id == null) return Optional.empty();
-        String sql = String.format("SELECT id, login, password, role FROM %s WHERE id = ?", tableName);
+        String sql = String.format("SELECT * FROM %s WHERE id = ?", tableName);
         return jdbcTemplate.query(sql, userRowMapper, id)
                 .stream()
                 .findFirst();
@@ -57,8 +58,8 @@ public class UserRepository {
      */
     public User save(User user) {
         String sql = String.format("""
-                INSERT INTO %s (login, password, role) 
-                VALUES (?, ?, ?) 
+                INSERT INTO %s (login, password, role, email) 
+                VALUES (?, ?, ?, ?) 
                 ON CONFLICT (login) DO UPDATE SET 
                 password = EXCLUDED.password, 
                 role = EXCLUDED.role
@@ -69,7 +70,8 @@ public class UserRepository {
         Long id = jdbcTemplate.queryForObject(sql, Long.class,
                 user.getLogin(),
                 user.getPassword(),
-                user.getRole().getSlug() // Предполагаем использование слага роли
+                user.getRole().getSlug(), // Предполагаем использование слага роли
+                user.getEmail()
         );
 
         user.setId(id);
@@ -77,7 +79,7 @@ public class UserRepository {
     }
 
     public List<User> selectOrdinaryUsers() {
-        String sql = String.format("SELECT id, login, password, role FROM %s WHERE role = ?", tableName);
+        String sql = String.format("SELECT * FROM %s WHERE role = ?", tableName);
         return jdbcTemplate.query(sql, userRowMapper, Role.ORDINARY.getSlug());
     }
 

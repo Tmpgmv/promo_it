@@ -13,16 +13,20 @@ public class User {
     private String login;
     private String password;
     private String role;
+    private String email;
 
     public User() {
+
     }
 
     public User(String login,
                 String password,
-                Role role) {
+                Role role,
+                String email) {
         this.login = login;
         this.password = password;
         this.role = role.getSlug();
+        this.email = email;
     }
 
     public String getLogin() {
@@ -64,5 +68,13 @@ public class User {
     @Override
     public String toString() {
         return "Login: %s, role: %s".formatted(login, role);
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

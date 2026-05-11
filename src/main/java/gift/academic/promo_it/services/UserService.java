@@ -42,7 +42,8 @@ public class UserService {
             User user = new User(
                     registerRequestDto.getLogin(),
                     encodedPassword,
-                    Role.fromSlug(registerRequestDto.getRole())
+                    Role.fromSlug(registerRequestDto.getRole()),
+                    registerRequestDto.getEmail()
             );
             result = userRepository.save(user);
         } catch (DuplicateKeyException ex) {
