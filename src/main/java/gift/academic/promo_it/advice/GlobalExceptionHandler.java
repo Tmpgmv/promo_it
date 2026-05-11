@@ -1,10 +1,13 @@
 package gift.academic.promo_it.advice;
 
 import gift.academic.promo_it.exceptions.*;
+import org.eclipse.angus.mail.smtp.SMTPAddressFailedException;
 import org.springframework.http.HttpStatus;
 
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailException;
+import org.springframework.mail.MailSendException;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -29,8 +32,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(LoginOccupiedException.class)
     public ProblemDetail handleLoginOccupied(LoginOccupiedException ex) {
-        // 400 Bad Request
-        return getProblemDetail(HttpStatus.BAD_REQUEST, ex);
+        // 409 Conflict
+        return getProblemDetail(HttpStatus.CONFLICT, ex);
     }
 
 
@@ -68,6 +71,15 @@ public class GlobalExceptionHandler {
                 HttpStatus.BAD_REQUEST, ex.getMessage());
         problem.setTitle("Bad request");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(problem);
+    }
+
+    @ExceptionHandler(MailSendException.class)
+    public ResponseEntity<ProblemDetail> handle(MailSendException ex) {
+        // 422
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
+                HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage());
+        problem.setTitle("Unprocessable Entity");
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(problem);
     }
 
 }

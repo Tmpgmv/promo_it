@@ -3,10 +3,13 @@ package gift.academic.promo_it.services;
 
 import gift.academic.promo_it.models.OtpConfig;
 import gift.academic.promo_it.repositories.OtpConfigRepository;
+import org.eclipse.angus.mail.smtp.SMTPSendFailedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.MailException;
+import org.springframework.mail.MailSendException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -68,9 +71,10 @@ public class EmailService {
 
             mailSender.send(message);
             logger.info("Email sent successfully to: {}", to);
-        } catch (Exception e) {
+        } catch (MailSendException e) {
             logger.error("Failed to send email to: {}. Error: {}", to, e.getMessage());
-            throw new RuntimeException("Failed to send email", e);
+            throw new MailSendException("Invalid address %s".formatted(to));
+
         }
     }
 

@@ -59,11 +59,7 @@ public class UserRepository {
     public User save(User user) {
         String sql = String.format("""
                 INSERT INTO %s (login, password, role, email) 
-                VALUES (?, ?, ?, ?) 
-                ON CONFLICT (login) DO UPDATE SET 
-                password = EXCLUDED.password, 
-                role = EXCLUDED.role
-                RETURNING id
+                VALUES (?, ?, ?, ?)                
                 """, tableName);
 
         // Выполняем запрос и получаем ID сохраненной записи

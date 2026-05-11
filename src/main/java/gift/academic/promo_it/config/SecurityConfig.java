@@ -48,7 +48,7 @@ public class SecurityConfig {
 
                         .requestMatchers("/otp/**").permitAll()
                         .requestMatchers("/users/**").permitAll()
-                        .requestMatchers("/operation/**").permitAll()
+//                        .requestMatchers("/operation/**").permitAll()
 
                         .anyRequest().authenticated()
                 )
