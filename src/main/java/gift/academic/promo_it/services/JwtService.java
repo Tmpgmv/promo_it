@@ -18,33 +18,20 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+
 @Service
 public class JwtService {
 
-        private final OtpConfigRepository otpConfigRepository;
+    private final OtpConfigRepository otpConfigRepository;
 
+    @Value("${jwt.expirationPeriodInMinutes}")
+    private long jwtExpirationPeriodInMinutes;
 
     @Value("${jwt.secret}")
     private String secret;
 
-
-    private long expirationInSeconds;
-
     public JwtService(OtpConfigRepository otpConfigRepository) {
         this.otpConfigRepository = otpConfigRepository;
-        expirationInSeconds = getExpirationTime().getSeconds();
-    }
-
-    public String generateToken(User user) {
-        SecretKey key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
-
-        return Jwts.builder()
-                .subject(user.getLogin())
-                .claims(Map.of("role", user.getRole().name())) // Добавляем роль в payload
-                .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + expirationInSeconds * 1000))
-                .signWith(key)
-                .compact();
     }
 
 
@@ -52,9 +39,21 @@ public class JwtService {
         return extractAllClaims(token).getSubject();
     }
 
+
     public String extractRole(String token) {
         return extractAllClaims(token).get("role", String.class);
     }
+
+
+    public boolean validateToken(String token) {
+        try {
+            extractAllClaims(token);
+            return !isTokenBlacklisted(token);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 
     private Claims extractAllClaims(String token) {
         SecretKey key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
@@ -65,22 +64,34 @@ public class JwtService {
                 .getPayload();
     }
 
-    public Duration getExpirationTime() {
-        Duration result = Duration.ofMinutes(5);
-        Optional<OtpConfig> otpConfig = otpConfigRepository.findConfig();
-
-        if (otpConfig.isPresent()) {
-            result = otpConfig.get().lifespan();
-        }
-
-        return result;
-    }
 
     private final Set<String> blacklist = ConcurrentHashMap.newKeySet();
+
     public void invalidateToken(String token) {
         blacklist.add(token);
     }
+
     public boolean isTokenBlacklisted(String token) {
         return blacklist.contains(token);
+    }
+
+
+    public String generateToken(User user) {
+        SecretKey key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+        Duration expirationTime = getExpirationTime();
+        long expirationSeconds = expirationTime.getSeconds();
+
+        return Jwts.builder()
+                .subject(user.getLogin())
+                .claims(Map.of("role", user.getRole().name()))
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + expirationSeconds * 1000))
+                .signWith(key)
+                .compact();
+    }
+
+    public Duration getExpirationTime() {
+        Optional<OtpConfig> otpConfig = otpConfigRepository.findConfig();
+        return Duration.ofMinutes(jwtExpirationPeriodInMinutes);
     }
 }
