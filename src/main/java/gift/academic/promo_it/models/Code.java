@@ -80,6 +80,10 @@ public class Code {
         this.expiresAt = OffsetDateTime.now().plus(lifespan);
     }
 
+    public void setExpiresAt(OffsetDateTime expiresAt) {
+        this.expiresAt = expiresAt;
+    }
+
     public OffsetDateTime getExpiresAt() {
         return expiresAt;
     }

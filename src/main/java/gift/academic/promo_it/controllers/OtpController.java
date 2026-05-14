@@ -4,12 +4,13 @@ import gift.academic.promo_it.dtos.otp.OtpConfigResponseDto;
 import gift.academic.promo_it.dtos.otp.OtpConfigUpdateRequestDto;
 import gift.academic.promo_it.dtos.otp.OtpGenerateRequestDto;
 import gift.academic.promo_it.dtos.otp.OtpGenerateResponseDto;
+import gift.academic.promo_it.models.Code;
 import gift.academic.promo_it.models.User;
+import gift.academic.promo_it.repositories.CodeRepository;
 import gift.academic.promo_it.repositories.UserRepository;
 import gift.academic.promo_it.services.EmailService;
 import gift.academic.promo_it.services.OtpConfigService;
 import gift.academic.promo_it.services.OtpService;
-import gift.academic.promo_it.services.UserService;
 import gift.academic.promo_it.validators.OtpRequestValidationService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +18,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import gift.academic.promo_it.constants.Media;
-
-import java.util.Locale;
 
 @RestController
 @RequestMapping("/otp")
@@ -29,15 +28,17 @@ public class OtpController {
     private final OtpService otpService;
     private final EmailService emailService;
     private final UserRepository userRepository;
+    private final CodeRepository codeRepository;
 
     public OtpController(OtpRequestValidationService validationService,
                          OtpConfigService configService, OtpService otpService,
-                         EmailService emailService, UserRepository userRepository) {
+                         EmailService emailService, UserRepository userRepository, CodeRepository codeRepository) {
         this.validationService = validationService;
         this.configService = configService;
         this.otpService = otpService;
         this.emailService = emailService;
         this.userRepository = userRepository;
+        this.codeRepository = codeRepository;
     }
 
     @GetMapping("/settings")
@@ -65,14 +66,14 @@ public class OtpController {
         User user = userRepository.findByLogin(userLogin).get();
 
 
-        String code = otpService.generateCode();
+        Code code = otpService.createAndSaveCode(user.getId(), request.operationId());
 
         switch(Media.fromSlug(request.media())) {
-            case EMAIL -> emailService.sendEmail(user.getEmail(), code);
+            case EMAIL -> emailService.sendEmail(user.getEmail(), code.getCode());
         }
 
 
-        return ResponseEntity.ok(new OtpGenerateResponseDto(code, request.media()));
+        return ResponseEntity.ok(new OtpGenerateResponseDto(code.getCode(), request.media()));
     }
 
 }

@@ -1,51 +1,65 @@
 package gift.academic.promo_it.repositories;
 
 import gift.academic.promo_it.models.Code;
-import org.springframework.data.jdbc.repository.query.Modifying;
-import org.springframework.data.jdbc.repository.query.Query;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.time.OffsetDateTime;
-import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface CodeRepository {
+public class CodeRepository {
 
-    // Validate OTP code for a specific user and operation
-    @Query("SELECT * FROM code WHERE user_id = :userId AND operation_id = :operationId AND code = :code AND status = 'active' AND expires_at > :now")
-    Optional<Code> validateCode(
-            @Param("userId") Long userId,
-            @Param("operationId") Long operationId,
-            @Param("code") String code,
-            @Param("now") OffsetDateTime now
-    );
+    private final String tableName = "code";
+    private final JdbcTemplate jdbcTemplate;
+    private final RowMapper<Code> codeRowMapper;
 
-    // Check if a valid code exists
-    @Query("SELECT EXISTS(SELECT 1 FROM code WHERE user_id = :userId AND operation_id = :operationId AND code = :code AND status = 'active' AND expires_at > :now)")
-    boolean existsValidCode(
-            @Param("userId") Long userId,
-            @Param("operationId") Long operationId,
-            @Param("code") String code,
-            @Param("now") OffsetDateTime now
-    );
+    public CodeRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
 
-    // Mark code as used
-    @Modifying
-    @Query("UPDATE code SET status = 'used' WHERE code = :code AND status = 'active'")
-    int markCodeAsUsed(@Param("code") String code);
+        this.codeRowMapper = (rs, rowNum) -> {
+            Code code = new Code();
+            code.setId(rs.getLong("id"));
+            code.setUserId(rs.getLong("user_id"));
+            code.setOperationId(rs.getLong("operation_id"));
+            code.setCode(rs.getString("code"));
+            code.setStatus(rs.getString("status"));
+            code.setExpiresAt(rs.getObject("expires_at", OffsetDateTime.class));
+            return code;
+        };
+    }
 
+    public Optional<Code> validateCode(Long userId, Long operationId, String code, OffsetDateTime now) {
+        String sql = String.format(
+                "SELECT * FROM %s WHERE user_id = ? AND operation_id = ? AND code = ? AND status = 'active' AND expires_at > ?",
+                tableName
+        );
+        return jdbcTemplate.query(sql, codeRowMapper, userId, operationId, code, now)
+                .stream()
+                .findFirst();
+    }
 
-    // Mark expired codes
-    @Modifying
-    @Query("UPDATE code SET status = 'expired' WHERE expires_at < :now AND status = 'active'")
-    int markExpiredCodes(@Param("now") OffsetDateTime now);
+    public int markCodeAsUsed(String code) {
+        String sql = String.format("UPDATE %s SET status = 'used' WHERE code = ? AND status = 'active'", tableName);
+        return jdbcTemplate.update(sql, code);
+    }
 
+    public void deleteByUserId(Long userId) {
+        String sql = String.format("DELETE FROM %s WHERE user_id = ?", tableName);
+        jdbcTemplate.update(sql, userId);
+    }
 
-    // Delete all codes for a user
-    @Modifying
-    @Query("DELETE FROM code WHERE user_id = :userId")
-    void deleteByUserId(@Param("userId") Long userId);
+    public void save(Long userId, Long operationId, String code, String status, OffsetDateTime expiresAt) {
+        String sql = String.format(
+                "INSERT INTO %s (user_id, operation_id, code, status, expires_at) VALUES (?, ?, ?, ?, ?)",
+                tableName
+        );
+        jdbcTemplate.update(sql, userId, operationId, code, status, expiresAt);
+    }
+
+    public Code saveAndReturn(Code code) {
+        save(code.getUserId(), code.getOperationId(), code.getCode(), code.getStatus(), code.getExpiresAt());
+        return code;
+    }
 }
