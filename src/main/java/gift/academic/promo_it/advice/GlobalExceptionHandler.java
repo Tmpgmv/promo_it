@@ -1,6 +1,7 @@
 package gift.academic.promo_it.advice;
 
 import gift.academic.promo_it.exceptions.*;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.eclipse.angus.mail.smtp.SMTPAddressFailedException;
 import org.springframework.http.HttpStatus;
 
@@ -81,5 +82,15 @@ public class GlobalExceptionHandler {
         problem.setTitle("Unprocessable Entity");
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(problem);
     }
+
+//    @ExceptionHandler(ExpiredJwtException.class)
+//    public ResponseEntity<ProblemDetail> handle(ExpiredJwtException ex) {
+//        // 403
+//        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
+//                HttpStatus.FORBIDDEN, ex.getMessage());
+//        problem.setTitle("FORBIDDEN");
+//        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(problem);
+//    }
+
 
 }

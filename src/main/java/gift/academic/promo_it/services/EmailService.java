@@ -3,6 +3,7 @@ package gift.academic.promo_it.services;
 
 import gift.academic.promo_it.models.OtpConfig;
 import gift.academic.promo_it.repositories.OtpConfigRepository;
+import jakarta.annotation.PostConstruct;
 import org.eclipse.angus.mail.smtp.SMTPSendFailedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,9 +32,29 @@ public class EmailService {
     @Value("${spring.mail.username}")
     private String fromEmail;
 
+    private void loadOtpCodeLifespan() {
+        Optional<OtpConfig> otpConfig = otpConfigRepository.findConfig();
+        if (otpConfig.isPresent()) {
+            otpCodeLifespan = otpConfig.get().lifespan().toMinutes();
+        }
+    }
+
+    @PostConstruct
+    public void init() {
+        loadOtpCodeLifespan();
+    }
+
     public EmailService(OtpConfigRepository otpConfigRepository) {
         this.otpConfigRepository = otpConfigRepository;
+        Optional<OtpConfig> otpConfig = otpConfigRepository.findConfig();
+
+        if (otpConfig.isPresent()) {
+            otpCodeLifespan = otpConfig.get().lifespan().toMinutes();
+        }
+
     }
+
+
 
 
     public void updateOtpCodeLifespan() {
