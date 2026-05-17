@@ -1,17 +1,12 @@
 package gift.academic.promo_it.advice;
 
 import gift.academic.promo_it.exceptions.*;
-import io.jsonwebtoken.ExpiredJwtException;
-import org.eclipse.angus.mail.smtp.SMTPAddressFailedException;
 import org.springframework.http.HttpStatus;
 
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.MailException;
 import org.springframework.mail.MailSendException;
-import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
@@ -38,8 +33,8 @@ public class GlobalExceptionHandler {
     }
 
 
-    @ExceptionHandler(AdminExistsException.class)
-    public ProblemDetail handleValidation(AdminExistsException ex) {
+    @ExceptionHandler(DuplicateException.class)
+    public ProblemDetail handleValidation(DuplicateException ex) {
         // 409 Conflict
         return getProblemDetail(HttpStatus.CONFLICT, ex);
     }

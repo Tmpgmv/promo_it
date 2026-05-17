@@ -259,8 +259,8 @@ paths:
               validOrdinary:
                 summary: Валидный обычный пользователь
                 value:
-                  login: "user123"
-                  password: "StrongPass123!"
+                  login: "user"
+                  password: "secretUserPass"
                   role: "ordinary"
                   email: "ordinary@example.com"
               validAdmin:
@@ -301,6 +301,19 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/LoginRequest'
+            examples:
+              ordinaryUser:
+                summary: Обычный пользователь
+                description: Аутентификация для пользователя с ролью ordinary
+                value:
+                  login: "user"
+                  password: "secretUserPass"
+              adminUser:
+                summary: Администратор
+                description: Аутентификация для пользователя с ролью admin
+                value:
+                  login: "admin"
+                  password: "secretAdminPass"
       responses:
         '200':
           description: Успешный вход
@@ -361,6 +374,57 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
+  /operation/create:
+    post:
+      x-role-required: ADMIN
+      tags:
+        - Operations
+      summary: Создать новую операцию
+      description: Создает новую операцию в системе. Доступно только для администраторов.
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewOperationRequest'
+            examples:
+              validOperation:
+                summary: "Валидная операция"
+                value:
+                  operationName: "Банковский перевод"
+      responses:
+        '200':
+          description: Операция успешно создана
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationResponse'
+        '400':
+          description: Ошибка валидации (некорректное имя операции)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+        '401':
+          description: Не авторизован
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+        '403':
+          description: Доступ запрещен (требуется роль ADMIN)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+        '409':
+          description: Операция с таким именем уже существует
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
 components:
   securitySchemes:
     bearerAuth:
@@ -368,6 +432,18 @@ components:
       scheme: bearer
       bearerFormat: JWT
   schemas:
+    NewOperationRequest:
+      type: object
+      required:
+        - operationName
+      properties:
+        operationName:
+          type: string
+          description: Название операции
+          minLength: 1
+          maxLength: 100
+          example: "Банковский перевод"
+      additionalProperties: false
     MediaMethod:
       type: string
       enum: [ sms, email, max, file ]

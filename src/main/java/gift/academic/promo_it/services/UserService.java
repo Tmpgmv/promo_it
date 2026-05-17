@@ -7,7 +7,7 @@ import gift.academic.promo_it.dtos.auth.LoginRequestDto;
 import gift.academic.promo_it.dtos.auth.LoginResponseDto;
 import gift.academic.promo_it.dtos.auth.RegisterRequestDto;
 import gift.academic.promo_it.exceptions.AdminDeletionForbiddenException;
-import gift.academic.promo_it.exceptions.AdminExistsException;
+import gift.academic.promo_it.exceptions.DuplicateException;
 import gift.academic.promo_it.exceptions.LoginOccupiedException;
 import gift.academic.promo_it.exceptions.UserNotFoundException;
 import gift.academic.promo_it.models.User;
@@ -49,7 +49,7 @@ public class UserService {
         } catch (DuplicateKeyException ex) {
             String msg = ex.getMessage().toLowerCase();
             if (msg.contains("one_admin_only")) {
-                throw new AdminExistsException();
+                throw new DuplicateException("Admin already exists");
             } else if (msg.contains("user_login_key")) {
                 throw new LoginOccupiedException(registerRequestDto.getLogin());
             }

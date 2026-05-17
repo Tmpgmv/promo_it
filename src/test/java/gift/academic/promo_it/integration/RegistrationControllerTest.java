@@ -2,7 +2,7 @@ package gift.academic.promo_it.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.academic.promo_it.dtos.auth.RegisterRequestDto;
-import gift.academic.promo_it.exceptions.AdminExistsException;
+import gift.academic.promo_it.exceptions.DuplicateException;
 import gift.academic.promo_it.exceptions.LoginOccupiedException;
 import gift.academic.promo_it.exceptions.WeakPasswordException;
 import gift.academic.promo_it.services.UserService;
@@ -140,7 +140,7 @@ public class RegistrationControllerTest {
         requestDto.setRole("admin");
 
         doNothing().when(passwordValidator).validatePassword(anyString());
-        when(userService.createUser(any())).thenThrow(new AdminExistsException());
+        when(userService.createUser(any())).thenThrow(new DuplicateException());
 
         mockMvc.perform(post(getUrl())
                         .contentType(MediaType.APPLICATION_JSON)

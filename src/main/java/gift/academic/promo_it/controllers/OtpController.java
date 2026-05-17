@@ -42,13 +42,13 @@ public class OtpController {
     }
 
     @GetMapping("/settings")
-//    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<OtpConfigResponseDto> getSettings() {
         return ResponseEntity.ok(OtpConfigResponseDto.fromModel(configService.getConfig()));
     }
 
     @PutMapping("/settings")
-//    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<OtpConfigResponseDto> updateSettings(
             @Valid @RequestBody OtpConfigUpdateRequestDto request) {
 

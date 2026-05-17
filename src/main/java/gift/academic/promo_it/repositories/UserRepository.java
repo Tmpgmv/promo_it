@@ -59,7 +59,8 @@ public class UserRepository {
     public User save(User user) {
         String sql = String.format("""
                 INSERT INTO %s (login, password, role, email) 
-                VALUES (?, ?, ?, ?)                
+                VALUES (?, ?, ?, ?)
+                RETURNING id                
                 """, tableName);
 
         // Выполняем запрос и получаем ID сохраненной записи

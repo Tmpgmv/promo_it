@@ -7,6 +7,7 @@ import gift.academic.promo_it.models.User;
 import gift.academic.promo_it.repositories.UserRepository;
 import gift.academic.promo_it.services.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public class UserController {
 
 
     @GetMapping("/list")
-//    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public List<UserResponseDto> getList() {
         List<User> ordinaryUsers = userRepository.selectOrdinaryUsers();
         List<UserResponseDto> result = userListToUserResponse.convert(ordinaryUsers);
@@ -35,7 +36,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-//    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
         userService.deleteUserById(id);
         return ResponseEntity.noContent().build();

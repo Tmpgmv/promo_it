@@ -33,4 +33,13 @@ public class Operation {
     public Operation(String operation_name) {
         this.operationName = operation_name;
     }
+
+    public static Operation fromModel(Operation operation) {
+        if (operation == null) return null;
+
+        Operation newOperation = new Operation();
+        newOperation.setId(operation.getId());
+        newOperation.setOperationName(operation.getOperationName());
+        return newOperation;
+    }
 }

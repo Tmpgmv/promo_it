@@ -6,6 +6,8 @@ import gift.academic.promo_it.models.Operation;
 import gift.academic.promo_it.models.User;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
@@ -38,8 +40,16 @@ public class OperationRepository {
                 .findFirst();
     }
 
-       public List<Operation> findAll() {
+    public List<Operation> findAll() {
         String sql = String.format("SELECT * FROM %s", tableName);
         return jdbcTemplate.query(sql, operationRowMapper);
+    }
+
+    public Operation create(String operationName) {
+        String insertSql = String.format("INSERT INTO %s (operation_name) VALUES (?)", tableName);
+        String selectSql = String.format("SELECT * FROM %s WHERE id = (SELECT LASTVAL())", tableName);
+
+        jdbcTemplate.update(insertSql, operationName);
+        return jdbcTemplate.queryForObject(selectSql, operationRowMapper);
     }
 }
