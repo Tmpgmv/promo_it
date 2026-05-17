@@ -55,8 +55,6 @@ public class EmailService {
     }
 
 
-
-
     public void updateOtpCodeLifespan() {
         Optional<OtpConfig> config = otpConfigRepository.findConfig();
         if (config.isPresent()) {
@@ -66,20 +64,42 @@ public class EmailService {
 
     public void sendEmail(String to, String otpCode) {
         String subject = "Код подтверждения";
+
+        String minutesWord = getMinutesWord();
         String text = String.format("""
                 Здравствуйте!
                 
                 Ваш проверочный код: %s
                 
-                Код действителен в течение %s минут.
+                Код действителен в течение %s %s.
                 
                 Никому не сообщайте этот код.
                 
                 С уважением,
                 Команда Promo-IT
-                """, otpCode, otpCodeLifespan);
+                """, otpCode, otpCodeLifespan, getMinutesWord());
 
         sendEmail(to, subject, text);
+    }
+
+    private String getMinutesWord() {
+        int lastDigit = (int) otpCodeLifespan % 10;
+        int lastTwoDigits = (int) otpCodeLifespan % 100;
+
+        if (lastTwoDigits >= 11 && lastTwoDigits <= 19) {
+            return "минут";
+        }
+
+        switch (lastDigit) {
+            case 1:
+                return "минута";
+            case 2:
+            case 3:
+            case 4:
+                return "минуты";
+            default:
+                return "минут";
+        }
     }
 
     public void sendEmail(String to, String subject, String text) {
